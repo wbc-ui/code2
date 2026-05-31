@@ -1,6 +1,6 @@
 {
   "name": "@wbc-ui/code2",
-  "version": "1.0.0-r12",
+  "version": "1.0.0-r13",
   "main": "dist/code2.umd.js",
   "module": "dist/code2.es.js",
   "files": [
@@ -9,12 +9,24 @@
     "LICENSE",
     "logo/"
   ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
   "dependencies": {
     "html2pdf.js": "^0.12.1",
     "prismjs": "^1.30.0"
   },
   "peerDependencies": {
-    "@wbc-ui/core2": "1.0.0-r12",
+    "@wbc-ui/core2": "1.0.0-r13",
     "vue": "^2.7.16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wbc-ui/code2.git"
+  },
+  "homepage": "https://github.com/wbc-ui/code2#readme",
+  "bugs": {
+    "url": "https://github.com/wbc-ui/code2/issues"
   }
 }

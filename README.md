@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./logo/wb-code.svg" alt="@wbc-ui/code2" width="220" style="max-width: 100%;"/>
+  <img src="https://cdn.jsdelivr.net/npm/@wbc-ui/code2/logo/wb-code.svg" alt="@wbc-ui/code2" width="220" style="max-width: 100%;"/>
 </p>
 
 <p align="center">
