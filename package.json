@@ -1,6 +1,6 @@
 {
   "name": "@wbc-ui/code2",
-  "version": "1.0.0-r14",
+  "version": "1.0.0-r15",
   "main": "dist/code2.umd.js",
   "module": "dist/code2.es.js",
   "files": [
@@ -18,7 +18,7 @@
     "prismjs": "^1.30.0"
   },
   "peerDependencies": {
-    "@wbc-ui/core2": "1.0.0-r14",
+    "@wbc-ui/core2": "1.0.0-r15",
     "vue": "^2.7.16"
   },
   "repository": {
