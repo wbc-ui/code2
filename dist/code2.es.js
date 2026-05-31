@@ -1,0 +1,5438 @@
+(function(){"use strict";try{if(typeof document<"u"){var e=document.createElement("style");e.appendChild(document.createTextNode("code[class*=language-],pre[class*=language-]{color:#000;background:none;text-shadow:0 1px white;font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]::-moz-selection,pre[class*=language-] ::-moz-selection,code[class*=language-]::-moz-selection,code[class*=language-] ::-moz-selection{text-shadow:none;background:#b3d4fc}pre[class*=language-]::selection,pre[class*=language-] ::selection,code[class*=language-]::selection,code[class*=language-] ::selection{text-shadow:none;background:#b3d4fc}@media print{code[class*=language-],pre[class*=language-]{text-shadow:none}}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#f5f2f0}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.comment,.token.prolog,.token.doctype,.token.cdata{color:#708090}.token.punctuation{color:#999}.token.namespace{opacity:.7}.token.property,.token.tag,.token.boolean,.token.number,.token.constant,.token.symbol,.token.deleted{color:#905}.token.selector,.token.attr-name,.token.string,.token.char,.token.builtin,.token.inserted{color:#690}.token.operator,.token.entity,.token.url,.language-css .token.string,.style .token.string{color:#9a6e3a;background:#ffffff80}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.function,.token.class-name{color:#dd4a68}.token.regex,.token.important,.token.variable{color:#e90}.token.important,.token.bold{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.prism-block[data-v-27cb118b]{border:1px solid #ddd;border-radius:8px;margin:1rem 0;background:#fff;box-shadow:0 1px 3px #0000001a;overflow:hidden;height:100%;display:flex;flex-direction:column}.prism-header[data-v-27cb118b]{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.5rem;padding:.5rem .75rem;background:#f8f9fa;border-bottom:1px solid #eee}.command-palette[data-v-27cb118b]{position:fixed;top:10vh;left:50%;transform:translate(-50%);width:500px;max-height:60vh;background:var(--bg, #fff);border:1px solid #ddd;border-radius:8px;box-shadow:0 10px 30px #0003;z-index:99999;overflow:hidden;font-family:system-ui}")),document.head.appendChild(e)}}catch(o){console.error("vite-plugin-css-injected-by-js",o)}})();
+import ge from "html2pdf.js";
+var ee = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
+function me(e) {
+  return e && e.__esModule && Object.prototype.hasOwnProperty.call(e, "default") ? e.default : e;
+}
+var X = { exports: {} }, te;
+function fe() {
+  return te || (te = 1, (function(e) {
+    var t = typeof window < "u" ? window : typeof WorkerGlobalScope < "u" && self instanceof WorkerGlobalScope ? self : {};
+    /**
+     * Prism: Lightweight, robust, elegant syntax highlighting
+     *
+     * @license MIT <https://opensource.org/licenses/MIT>
+     * @author Lea Verou <https://lea.verou.me>
+     * @namespace
+     * @public
+     */
+    var i = (function(s) {
+      var a = /(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i, u = 0, l = {}, d = {
+        /**
+         * By default, Prism will attempt to highlight all code elements (by calling {@link Prism.highlightAll}) on the
+         * current page after the page finished loading. This might be a problem if e.g. you wanted to asynchronously load
+         * additional languages or plugins yourself.
+         *
+         * By setting this value to `true`, Prism will not automatically highlight all code elements on the page.
+         *
+         * You obviously have to change this value before the automatic highlighting started. To do this, you can add an
+         * empty Prism object into the global scope before loading the Prism script like this:
+         *
+         * ```js
+         * window.Prism = window.Prism || {};
+         * Prism.manual = true;
+         * // add a new <script> to load Prism's script
+         * ```
+         *
+         * @default false
+         * @type {boolean}
+         * @memberof Prism
+         * @public
+         */
+        manual: s.Prism && s.Prism.manual,
+        /**
+         * By default, if Prism is in a web worker, it assumes that it is in a worker it created itself, so it uses
+         * `addEventListener` to communicate with its parent instance. However, if you're using Prism manually in your
+         * own worker, you don't want it to do this.
+         *
+         * By setting this value to `true`, Prism will not add its own listeners to the worker.
+         *
+         * You obviously have to change this value before Prism executes. To do this, you can add an
+         * empty Prism object into the global scope before loading the Prism script like this:
+         *
+         * ```js
+         * window.Prism = window.Prism || {};
+         * Prism.disableWorkerMessageHandler = true;
+         * // Load Prism's script
+         * ```
+         *
+         * @default false
+         * @type {boolean}
+         * @memberof Prism
+         * @public
+         */
+        disableWorkerMessageHandler: s.Prism && s.Prism.disableWorkerMessageHandler,
+        /**
+         * A namespace for utility methods.
+         *
+         * All function in this namespace that are not explicitly marked as _public_ are for __internal use only__ and may
+         * change or disappear at any time.
+         *
+         * @namespace
+         * @memberof Prism
+         */
+        util: {
+          encode: function o(r) {
+            return r instanceof m ? new m(r.type, o(r.content), r.alias) : Array.isArray(r) ? r.map(o) : r.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\u00a0/g, " ");
+          },
+          /**
+           * Returns the name of the type of the given value.
+           *
+           * @param {any} o
+           * @returns {string}
+           * @example
+           * type(null)      === 'Null'
+           * type(undefined) === 'Undefined'
+           * type(123)       === 'Number'
+           * type('foo')     === 'String'
+           * type(true)      === 'Boolean'
+           * type([1, 2])    === 'Array'
+           * type({})        === 'Object'
+           * type(String)    === 'Function'
+           * type(/abc+/)    === 'RegExp'
+           */
+          type: function(o) {
+            return Object.prototype.toString.call(o).slice(8, -1);
+          },
+          /**
+           * Returns a unique number for the given object. Later calls will still return the same number.
+           *
+           * @param {Object} obj
+           * @returns {number}
+           */
+          objId: function(o) {
+            return o.__id || Object.defineProperty(o, "__id", { value: ++u }), o.__id;
+          },
+          /**
+           * Creates a deep clone of the given object.
+           *
+           * The main intended use of this function is to clone language definitions.
+           *
+           * @param {T} o
+           * @param {Record<number, any>} [visited]
+           * @returns {T}
+           * @template T
+           */
+          clone: function o(r, c) {
+            c = c || {};
+            var h, p;
+            switch (d.util.type(r)) {
+              case "Object":
+                if (p = d.util.objId(r), c[p])
+                  return c[p];
+                h = /** @type {Record<string, any>} */
+                {}, c[p] = h;
+                for (var g in r)
+                  r.hasOwnProperty(g) && (h[g] = o(r[g], c));
+                return (
+                  /** @type {any} */
+                  h
+                );
+              case "Array":
+                return p = d.util.objId(r), c[p] ? c[p] : (h = [], c[p] = h, /** @type {Array} */
+                /** @type {any} */
+                r.forEach(function(y, n) {
+                  h[n] = o(y, c);
+                }), /** @type {any} */
+                h);
+              default:
+                return r;
+            }
+          },
+          /**
+           * Returns the Prism language of the given element set by a `language-xxxx` or `lang-xxxx` class.
+           *
+           * If no language is set for the element or the element is `null` or `undefined`, `none` will be returned.
+           *
+           * @param {Element} element
+           * @returns {string}
+           */
+          getLanguage: function(o) {
+            for (; o; ) {
+              var r = a.exec(o.className);
+              if (r)
+                return r[1].toLowerCase();
+              o = o.parentElement;
+            }
+            return "none";
+          },
+          /**
+           * Sets the Prism `language-xxxx` class of the given element.
+           *
+           * @param {Element} element
+           * @param {string} language
+           * @returns {void}
+           */
+          setLanguage: function(o, r) {
+            o.className = o.className.replace(RegExp(a, "gi"), ""), o.classList.add("language-" + r);
+          },
+          /**
+           * Returns the script element that is currently executing.
+           *
+           * This does __not__ work for line script element.
+           *
+           * @returns {HTMLScriptElement | null}
+           */
+          currentScript: function() {
+            if (typeof document > "u")
+              return null;
+            if (document.currentScript && document.currentScript.tagName === "SCRIPT")
+              return (
+                /** @type {any} */
+                document.currentScript
+              );
+            try {
+              throw new Error();
+            } catch (h) {
+              var o = (/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(h.stack) || [])[1];
+              if (o) {
+                var r = document.getElementsByTagName("script");
+                for (var c in r)
+                  if (r[c].src == o)
+                    return r[c];
+              }
+              return null;
+            }
+          },
+          /**
+           * Returns whether a given class is active for `element`.
+           *
+           * The class can be activated if `element` or one of its ancestors has the given class and it can be deactivated
+           * if `element` or one of its ancestors has the negated version of the given class. The _negated version_ of the
+           * given class is just the given class with a `no-` prefix.
+           *
+           * Whether the class is active is determined by the closest ancestor of `element` (where `element` itself is
+           * closest ancestor) that has the given class or the negated version of it. If neither `element` nor any of its
+           * ancestors have the given class or the negated version of it, then the default activation will be returned.
+           *
+           * In the paradoxical situation where the closest ancestor contains __both__ the given class and the negated
+           * version of it, the class is considered active.
+           *
+           * @param {Element} element
+           * @param {string} className
+           * @param {boolean} [defaultActivation=false]
+           * @returns {boolean}
+           */
+          isActive: function(o, r, c) {
+            for (var h = "no-" + r; o; ) {
+              var p = o.classList;
+              if (p.contains(r))
+                return !0;
+              if (p.contains(h))
+                return !1;
+              o = o.parentElement;
+            }
+            return !!c;
+          }
+        },
+        /**
+         * This namespace contains all currently loaded languages and the some helper functions to create and modify languages.
+         *
+         * @namespace
+         * @memberof Prism
+         * @public
+         */
+        languages: {
+          /**
+           * The grammar for plain, unformatted text.
+           */
+          plain: l,
+          plaintext: l,
+          text: l,
+          txt: l,
+          /**
+           * Creates a deep copy of the language with the given id and appends the given tokens.
+           *
+           * If a token in `redef` also appears in the copied language, then the existing token in the copied language
+           * will be overwritten at its original position.
+           *
+           * ## Best practices
+           *
+           * Since the position of overwriting tokens (token in `redef` that overwrite tokens in the copied language)
+           * doesn't matter, they can technically be in any order. However, this can be confusing to others that trying to
+           * understand the language definition because, normally, the order of tokens matters in Prism grammars.
+           *
+           * Therefore, it is encouraged to order overwriting tokens according to the positions of the overwritten tokens.
+           * Furthermore, all non-overwriting tokens should be placed after the overwriting ones.
+           *
+           * @param {string} id The id of the language to extend. This has to be a key in `Prism.languages`.
+           * @param {Grammar} redef The new tokens to append.
+           * @returns {Grammar} The new language created.
+           * @public
+           * @example
+           * Prism.languages['css-with-colors'] = Prism.languages.extend('css', {
+           *     // Prism.languages.css already has a 'comment' token, so this token will overwrite CSS' 'comment' token
+           *     // at its original position
+           *     'comment': { ... },
+           *     // CSS doesn't have a 'color' token, so this token will be appended
+           *     'color': /\b(?:red|green|blue)\b/
+           * });
+           */
+          extend: function(o, r) {
+            var c = d.util.clone(d.languages[o]);
+            for (var h in r)
+              c[h] = r[h];
+            return c;
+          },
+          /**
+           * Inserts tokens _before_ another token in a language definition or any other grammar.
+           *
+           * ## Usage
+           *
+           * This helper method makes it easy to modify existing languages. For example, the CSS language definition
+           * not only defines CSS highlighting for CSS documents, but also needs to define highlighting for CSS embedded
+           * in HTML through `<style>` elements. To do this, it needs to modify `Prism.languages.markup` and add the
+           * appropriate tokens. However, `Prism.languages.markup` is a regular JavaScript object literal, so if you do
+           * this:
+           *
+           * ```js
+           * Prism.languages.markup.style = {
+           *     // token
+           * };
+           * ```
+           *
+           * then the `style` token will be added (and processed) at the end. `insertBefore` allows you to insert tokens
+           * before existing tokens. For the CSS example above, you would use it like this:
+           *
+           * ```js
+           * Prism.languages.insertBefore('markup', 'cdata', {
+           *     'style': {
+           *         // token
+           *     }
+           * });
+           * ```
+           *
+           * ## Special cases
+           *
+           * If the grammars of `inside` and `insert` have tokens with the same name, the tokens in `inside`'s grammar
+           * will be ignored.
+           *
+           * This behavior can be used to insert tokens after `before`:
+           *
+           * ```js
+           * Prism.languages.insertBefore('markup', 'comment', {
+           *     'comment': Prism.languages.markup.comment,
+           *     // tokens after 'comment'
+           * });
+           * ```
+           *
+           * ## Limitations
+           *
+           * The main problem `insertBefore` has to solve is iteration order. Since ES2015, the iteration order for object
+           * properties is guaranteed to be the insertion order (except for integer keys) but some browsers behave
+           * differently when keys are deleted and re-inserted. So `insertBefore` can't be implemented by temporarily
+           * deleting properties which is necessary to insert at arbitrary positions.
+           *
+           * To solve this problem, `insertBefore` doesn't actually insert the given tokens into the target object.
+           * Instead, it will create a new object and replace all references to the target object with the new one. This
+           * can be done without temporarily deleting properties, so the iteration order is well-defined.
+           *
+           * However, only references that can be reached from `Prism.languages` or `insert` will be replaced. I.e. if
+           * you hold the target object in a variable, then the value of the variable will not change.
+           *
+           * ```js
+           * var oldMarkup = Prism.languages.markup;
+           * var newMarkup = Prism.languages.insertBefore('markup', 'comment', { ... });
+           *
+           * assert(oldMarkup !== Prism.languages.markup);
+           * assert(newMarkup === Prism.languages.markup);
+           * ```
+           *
+           * @param {string} inside The property of `root` (e.g. a language id in `Prism.languages`) that contains the
+           * object to be modified.
+           * @param {string} before The key to insert before.
+           * @param {Grammar} insert An object containing the key-value pairs to be inserted.
+           * @param {Object<string, any>} [root] The object containing `inside`, i.e. the object that contains the
+           * object to be modified.
+           *
+           * Defaults to `Prism.languages`.
+           * @returns {Grammar} The new grammar object.
+           * @public
+           */
+          insertBefore: function(o, r, c, h) {
+            h = h || /** @type {any} */
+            d.languages;
+            var p = h[o], g = {};
+            for (var y in p)
+              if (p.hasOwnProperty(y)) {
+                if (y == r)
+                  for (var n in c)
+                    c.hasOwnProperty(n) && (g[n] = c[n]);
+                c.hasOwnProperty(y) || (g[y] = p[y]);
+              }
+            var k = h[o];
+            return h[o] = g, d.languages.DFS(d.languages, function(x, _) {
+              _ === k && x != o && (this[x] = g);
+            }), g;
+          },
+          // Traverse a language definition with Depth First Search
+          DFS: function o(r, c, h, p) {
+            p = p || {};
+            var g = d.util.objId;
+            for (var y in r)
+              if (r.hasOwnProperty(y)) {
+                c.call(r, y, r[y], h || y);
+                var n = r[y], k = d.util.type(n);
+                k === "Object" && !p[g(n)] ? (p[g(n)] = !0, o(n, c, null, p)) : k === "Array" && !p[g(n)] && (p[g(n)] = !0, o(n, c, y, p));
+              }
+          }
+        },
+        plugins: {},
+        /**
+         * This is the most high-level function in Prism’s API.
+         * It fetches all the elements that have a `.language-xxxx` class and then calls {@link Prism.highlightElement} on
+         * each one of them.
+         *
+         * This is equivalent to `Prism.highlightAllUnder(document, async, callback)`.
+         *
+         * @param {boolean} [async=false] Same as in {@link Prism.highlightAllUnder}.
+         * @param {HighlightCallback} [callback] Same as in {@link Prism.highlightAllUnder}.
+         * @memberof Prism
+         * @public
+         */
+        highlightAll: function(o, r) {
+          d.highlightAllUnder(document, o, r);
+        },
+        /**
+         * Fetches all the descendants of `container` that have a `.language-xxxx` class and then calls
+         * {@link Prism.highlightElement} on each one of them.
+         *
+         * The following hooks will be run:
+         * 1. `before-highlightall`
+         * 2. `before-all-elements-highlight`
+         * 3. All hooks of {@link Prism.highlightElement} for each element.
+         *
+         * @param {ParentNode} container The root element, whose descendants that have a `.language-xxxx` class will be highlighted.
+         * @param {boolean} [async=false] Whether each element is to be highlighted asynchronously using Web Workers.
+         * @param {HighlightCallback} [callback] An optional callback to be invoked on each element after its highlighting is done.
+         * @memberof Prism
+         * @public
+         */
+        highlightAllUnder: function(o, r, c) {
+          var h = {
+            callback: c,
+            container: o,
+            selector: 'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'
+          };
+          d.hooks.run("before-highlightall", h), h.elements = Array.prototype.slice.apply(h.container.querySelectorAll(h.selector)), d.hooks.run("before-all-elements-highlight", h);
+          for (var p = 0, g; g = h.elements[p++]; )
+            d.highlightElement(g, r === !0, h.callback);
+        },
+        /**
+         * Highlights the code inside a single element.
+         *
+         * The following hooks will be run:
+         * 1. `before-sanity-check`
+         * 2. `before-highlight`
+         * 3. All hooks of {@link Prism.highlight}. These hooks will be run by an asynchronous worker if `async` is `true`.
+         * 4. `before-insert`
+         * 5. `after-highlight`
+         * 6. `complete`
+         *
+         * Some the above hooks will be skipped if the element doesn't contain any text or there is no grammar loaded for
+         * the element's language.
+         *
+         * @param {Element} element The element containing the code.
+         * It must have a class of `language-xxxx` to be processed, where `xxxx` is a valid language identifier.
+         * @param {boolean} [async=false] Whether the element is to be highlighted asynchronously using Web Workers
+         * to improve performance and avoid blocking the UI when highlighting very large chunks of code. This option is
+         * [disabled by default](https://prismjs.com/faq.html#why-is-asynchronous-highlighting-disabled-by-default).
+         *
+         * Note: All language definitions required to highlight the code must be included in the main `prism.js` file for
+         * asynchronous highlighting to work. You can build your own bundle on the
+         * [Download page](https://prismjs.com/download.html).
+         * @param {HighlightCallback} [callback] An optional callback to be invoked after the highlighting is done.
+         * Mostly useful when `async` is `true`, since in that case, the highlighting is done asynchronously.
+         * @memberof Prism
+         * @public
+         */
+        highlightElement: function(o, r, c) {
+          var h = d.util.getLanguage(o), p = d.languages[h];
+          d.util.setLanguage(o, h);
+          var g = o.parentElement;
+          g && g.nodeName.toLowerCase() === "pre" && d.util.setLanguage(g, h);
+          var y = o.textContent, n = {
+            element: o,
+            language: h,
+            grammar: p,
+            code: y
+          };
+          function k(_) {
+            n.highlightedCode = _, d.hooks.run("before-insert", n), n.element.innerHTML = n.highlightedCode, d.hooks.run("after-highlight", n), d.hooks.run("complete", n), c && c.call(n.element);
+          }
+          if (d.hooks.run("before-sanity-check", n), g = n.element.parentElement, g && g.nodeName.toLowerCase() === "pre" && !g.hasAttribute("tabindex") && g.setAttribute("tabindex", "0"), !n.code) {
+            d.hooks.run("complete", n), c && c.call(n.element);
+            return;
+          }
+          if (d.hooks.run("before-highlight", n), !n.grammar) {
+            k(d.util.encode(n.code));
+            return;
+          }
+          if (r && s.Worker) {
+            var x = new Worker(d.filename);
+            x.onmessage = function(_) {
+              k(_.data);
+            }, x.postMessage(JSON.stringify({
+              language: n.language,
+              code: n.code,
+              immediateClose: !0
+            }));
+          } else
+            k(d.highlight(n.code, n.grammar, n.language));
+        },
+        /**
+         * Low-level function, only use if you know what you’re doing. It accepts a string of text as input
+         * and the language definitions to use, and returns a string with the HTML produced.
+         *
+         * The following hooks will be run:
+         * 1. `before-tokenize`
+         * 2. `after-tokenize`
+         * 3. `wrap`: On each {@link Token}.
+         *
+         * @param {string} text A string with the code to be highlighted.
+         * @param {Grammar} grammar An object containing the tokens to use.
+         *
+         * Usually a language definition like `Prism.languages.markup`.
+         * @param {string} language The name of the language definition passed to `grammar`.
+         * @returns {string} The highlighted HTML.
+         * @memberof Prism
+         * @public
+         * @example
+         * Prism.highlight('var foo = true;', Prism.languages.javascript, 'javascript');
+         */
+        highlight: function(o, r, c) {
+          var h = {
+            code: o,
+            grammar: r,
+            language: c
+          };
+          if (d.hooks.run("before-tokenize", h), !h.grammar)
+            throw new Error('The language "' + h.language + '" has no grammar.');
+          return h.tokens = d.tokenize(h.code, h.grammar), d.hooks.run("after-tokenize", h), m.stringify(d.util.encode(h.tokens), h.language);
+        },
+        /**
+         * This is the heart of Prism, and the most low-level function you can use. It accepts a string of text as input
+         * and the language definitions to use, and returns an array with the tokenized code.
+         *
+         * When the language definition includes nested tokens, the function is called recursively on each of these tokens.
+         *
+         * This method could be useful in other contexts as well, as a very crude parser.
+         *
+         * @param {string} text A string with the code to be highlighted.
+         * @param {Grammar} grammar An object containing the tokens to use.
+         *
+         * Usually a language definition like `Prism.languages.markup`.
+         * @returns {TokenStream} An array of strings and tokens, a token stream.
+         * @memberof Prism
+         * @public
+         * @example
+         * let code = `var foo = 0;`;
+         * let tokens = Prism.tokenize(code, Prism.languages.javascript);
+         * tokens.forEach(token => {
+         *     if (token instanceof Prism.Token && token.type === 'number') {
+         *         console.log(`Found numeric literal: ${token.content}`);
+         *     }
+         * });
+         */
+        tokenize: function(o, r) {
+          var c = r.rest;
+          if (c) {
+            for (var h in c)
+              r[h] = c[h];
+            delete r.rest;
+          }
+          var p = new w();
+          return $(p, p.head, o), b(o, p, r, p.head, 0), A(p);
+        },
+        /**
+         * @namespace
+         * @memberof Prism
+         * @public
+         */
+        hooks: {
+          all: {},
+          /**
+           * Adds the given callback to the list of callbacks for the given hook.
+           *
+           * The callback will be invoked when the hook it is registered for is run.
+           * Hooks are usually directly run by a highlight function but you can also run hooks yourself.
+           *
+           * One callback function can be registered to multiple hooks and the same hook multiple times.
+           *
+           * @param {string} name The name of the hook.
+           * @param {HookCallback} callback The callback function which is given environment variables.
+           * @public
+           */
+          add: function(o, r) {
+            var c = d.hooks.all;
+            c[o] = c[o] || [], c[o].push(r);
+          },
+          /**
+           * Runs a hook invoking all registered callbacks with the given environment variables.
+           *
+           * Callbacks will be invoked synchronously and in the order in which they were registered.
+           *
+           * @param {string} name The name of the hook.
+           * @param {Object<string, any>} env The environment variables of the hook passed to all callbacks registered.
+           * @public
+           */
+          run: function(o, r) {
+            var c = d.hooks.all[o];
+            if (!(!c || !c.length))
+              for (var h = 0, p; p = c[h++]; )
+                p(r);
+          }
+        },
+        Token: m
+      };
+      s.Prism = d;
+      function m(o, r, c, h) {
+        this.type = o, this.content = r, this.alias = c, this.length = (h || "").length | 0;
+      }
+      m.stringify = function o(r, c) {
+        if (typeof r == "string")
+          return r;
+        if (Array.isArray(r)) {
+          var h = "";
+          return r.forEach(function(k) {
+            h += o(k, c);
+          }), h;
+        }
+        var p = {
+          type: r.type,
+          content: o(r.content, c),
+          tag: "span",
+          classes: ["token", r.type],
+          attributes: {},
+          language: c
+        }, g = r.alias;
+        g && (Array.isArray(g) ? Array.prototype.push.apply(p.classes, g) : p.classes.push(g)), d.hooks.run("wrap", p);
+        var y = "";
+        for (var n in p.attributes)
+          y += " " + n + '="' + (p.attributes[n] || "").replace(/"/g, "&quot;") + '"';
+        return "<" + p.tag + ' class="' + p.classes.join(" ") + '"' + y + ">" + p.content + "</" + p.tag + ">";
+      };
+      function S(o, r, c, h) {
+        o.lastIndex = r;
+        var p = o.exec(c);
+        if (p && h && p[1]) {
+          var g = p[1].length;
+          p.index += g, p[0] = p[0].slice(g);
+        }
+        return p;
+      }
+      function b(o, r, c, h, p, g) {
+        for (var y in c)
+          if (!(!c.hasOwnProperty(y) || !c[y])) {
+            var n = c[y];
+            n = Array.isArray(n) ? n : [n];
+            for (var k = 0; k < n.length; ++k) {
+              if (g && g.cause == y + "," + k)
+                return;
+              var x = n[k], _ = x.inside, L = !!x.lookbehind, D = !!x.greedy, R = x.alias;
+              if (D && !x.pattern.global) {
+                var V = x.pattern.toString().match(/[imsuy]*$/)[0];
+                x.pattern = RegExp(x.pattern.source, V + "g");
+              }
+              for (var H = x.pattern || x, F = h.next, T = p; F !== r.tail && !(g && T >= g.reach); T += F.value.length, F = F.next) {
+                var M = F.value;
+                if (r.length > o.length)
+                  return;
+                if (!(M instanceof m)) {
+                  var B = 1, P;
+                  if (D) {
+                    if (P = S(H, T, o, L), !P || P.index >= o.length)
+                      break;
+                    var U = P.index, he = P.index + P[0].length, I = T;
+                    for (I += F.value.length; U >= I; )
+                      F = F.next, I += F.value.length;
+                    if (I -= F.value.length, T = I, F.value instanceof m)
+                      continue;
+                    for (var N = F; N !== r.tail && (I < he || typeof N.value == "string"); N = N.next)
+                      B++, I += N.value.length;
+                    B--, M = o.slice(T, I), P.index -= T;
+                  } else if (P = S(H, 0, M, L), !P)
+                    continue;
+                  var U = P.index, W = P[0], K = M.slice(0, U), Q = M.slice(U + W.length), J = T + M.length;
+                  g && J > g.reach && (g.reach = J);
+                  var G = F.prev;
+                  K && (G = $(r, G, K), T += K.length), E(r, G, B);
+                  var pe = new m(y, _ ? d.tokenize(W, _) : W, R, W);
+                  if (F = $(r, G, pe), Q && $(r, F, Q), B > 1) {
+                    var Z = {
+                      cause: y + "," + k,
+                      reach: J
+                    };
+                    b(o, r, c, F.prev, T, Z), g && Z.reach > g.reach && (g.reach = Z.reach);
+                  }
+                }
+              }
+            }
+          }
+      }
+      function w() {
+        var o = { value: null, prev: null, next: null }, r = { value: null, prev: o, next: null };
+        o.next = r, this.head = o, this.tail = r, this.length = 0;
+      }
+      function $(o, r, c) {
+        var h = r.next, p = { value: c, prev: r, next: h };
+        return r.next = p, h.prev = p, o.length++, p;
+      }
+      function E(o, r, c) {
+        for (var h = r.next, p = 0; p < c && h !== o.tail; p++)
+          h = h.next;
+        r.next = h, h.prev = r, o.length -= p;
+      }
+      function A(o) {
+        for (var r = [], c = o.head.next; c !== o.tail; )
+          r.push(c.value), c = c.next;
+        return r;
+      }
+      if (!s.document)
+        return s.addEventListener && (d.disableWorkerMessageHandler || s.addEventListener("message", function(o) {
+          var r = JSON.parse(o.data), c = r.language, h = r.code, p = r.immediateClose;
+          s.postMessage(d.highlight(h, d.languages[c], c)), p && s.close();
+        }, !1)), d;
+      var C = d.util.currentScript();
+      C && (d.filename = C.src, C.hasAttribute("data-manual") && (d.manual = !0));
+      function f() {
+        d.manual || d.highlightAll();
+      }
+      if (!d.manual) {
+        var v = document.readyState;
+        v === "loading" || v === "interactive" && C && C.defer ? document.addEventListener("DOMContentLoaded", f) : window.requestAnimationFrame ? window.requestAnimationFrame(f) : window.setTimeout(f, 16);
+      }
+      return d;
+    })(t);
+    e.exports && (e.exports = i), typeof ee < "u" && (ee.Prism = i), i.languages.markup = {
+      comment: {
+        pattern: /<!--(?:(?!<!--)[\s\S])*?-->/,
+        greedy: !0
+      },
+      prolog: {
+        pattern: /<\?[\s\S]+?\?>/,
+        greedy: !0
+      },
+      doctype: {
+        // https://www.w3.org/TR/xml/#NT-doctypedecl
+        pattern: /<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,
+        greedy: !0,
+        inside: {
+          "internal-subset": {
+            pattern: /(^[^\[]*\[)[\s\S]+(?=\]>$)/,
+            lookbehind: !0,
+            greedy: !0,
+            inside: null
+            // see below
+          },
+          string: {
+            pattern: /"[^"]*"|'[^']*'/,
+            greedy: !0
+          },
+          punctuation: /^<!|>$|[[\]]/,
+          "doctype-tag": /^DOCTYPE/i,
+          name: /[^\s<>'"]+/
+        }
+      },
+      cdata: {
+        pattern: /<!\[CDATA\[[\s\S]*?\]\]>/i,
+        greedy: !0
+      },
+      tag: {
+        pattern: /<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,
+        greedy: !0,
+        inside: {
+          tag: {
+            pattern: /^<\/?[^\s>\/]+/,
+            inside: {
+              punctuation: /^<\/?/,
+              namespace: /^[^\s>\/:]+:/
+            }
+          },
+          "special-attr": [],
+          "attr-value": {
+            pattern: /=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,
+            inside: {
+              punctuation: [
+                {
+                  pattern: /^=/,
+                  alias: "attr-equals"
+                },
+                {
+                  pattern: /^(\s*)["']|["']$/,
+                  lookbehind: !0
+                }
+              ]
+            }
+          },
+          punctuation: /\/?>/,
+          "attr-name": {
+            pattern: /[^\s>\/]+/,
+            inside: {
+              namespace: /^[^\s>\/:]+:/
+            }
+          }
+        }
+      },
+      entity: [
+        {
+          pattern: /&[\da-z]{1,8};/i,
+          alias: "named-entity"
+        },
+        /&#x?[\da-f]{1,8};/i
+      ]
+    }, i.languages.markup.tag.inside["attr-value"].inside.entity = i.languages.markup.entity, i.languages.markup.doctype.inside["internal-subset"].inside = i.languages.markup, i.hooks.add("wrap", function(s) {
+      s.type === "entity" && (s.attributes.title = s.content.replace(/&amp;/, "&"));
+    }), Object.defineProperty(i.languages.markup.tag, "addInlined", {
+      /**
+       * Adds an inlined language to markup.
+       *
+       * An example of an inlined language is CSS with `<style>` tags.
+       *
+       * @param {string} tagName The name of the tag that contains the inlined language. This name will be treated as
+       * case insensitive.
+       * @param {string} lang The language key.
+       * @example
+       * addInlined('style', 'css');
+       */
+      value: function(a, u) {
+        var l = {};
+        l["language-" + u] = {
+          pattern: /(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,
+          lookbehind: !0,
+          inside: i.languages[u]
+        }, l.cdata = /^<!\[CDATA\[|\]\]>$/i;
+        var d = {
+          "included-cdata": {
+            pattern: /<!\[CDATA\[[\s\S]*?\]\]>/i,
+            inside: l
+          }
+        };
+        d["language-" + u] = {
+          pattern: /[\s\S]+/,
+          inside: i.languages[u]
+        };
+        var m = {};
+        m[a] = {
+          pattern: RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g, function() {
+            return a;
+          }), "i"),
+          lookbehind: !0,
+          greedy: !0,
+          inside: d
+        }, i.languages.insertBefore("markup", "cdata", m);
+      }
+    }), Object.defineProperty(i.languages.markup.tag, "addAttribute", {
+      /**
+       * Adds an pattern to highlight languages embedded in HTML attributes.
+       *
+       * An example of an inlined language is CSS with `style` attributes.
+       *
+       * @param {string} attrName The name of the tag that contains the inlined language. This name will be treated as
+       * case insensitive.
+       * @param {string} lang The language key.
+       * @example
+       * addAttribute('style', 'css');
+       */
+      value: function(s, a) {
+        i.languages.markup.tag.inside["special-attr"].push({
+          pattern: RegExp(
+            /(^|["'\s])/.source + "(?:" + s + ")" + /\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,
+            "i"
+          ),
+          lookbehind: !0,
+          inside: {
+            "attr-name": /^[^\s=]+/,
+            "attr-value": {
+              pattern: /=[\s\S]+/,
+              inside: {
+                value: {
+                  pattern: /(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,
+                  lookbehind: !0,
+                  alias: [a, "language-" + a],
+                  inside: i.languages[a]
+                },
+                punctuation: [
+                  {
+                    pattern: /^=/,
+                    alias: "attr-equals"
+                  },
+                  /"|'/
+                ]
+              }
+            }
+          }
+        });
+      }
+    }), i.languages.html = i.languages.markup, i.languages.mathml = i.languages.markup, i.languages.svg = i.languages.markup, i.languages.xml = i.languages.extend("markup", {}), i.languages.ssml = i.languages.xml, i.languages.atom = i.languages.xml, i.languages.rss = i.languages.xml, (function(s) {
+      var a = /(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;
+      s.languages.css = {
+        comment: /\/\*[\s\S]*?\*\//,
+        atrule: {
+          pattern: RegExp("@[\\w-](?:" + /[^;{\s"']|\s+(?!\s)/.source + "|" + a.source + ")*?" + /(?:;|(?=\s*\{))/.source),
+          inside: {
+            rule: /^@[\w-]+/,
+            "selector-function-argument": {
+              pattern: /(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,
+              lookbehind: !0,
+              alias: "selector"
+            },
+            keyword: {
+              pattern: /(^|[^\w-])(?:and|not|only|or)(?![\w-])/,
+              lookbehind: !0
+            }
+            // See rest below
+          }
+        },
+        url: {
+          // https://drafts.csswg.org/css-values-3/#urls
+          pattern: RegExp("\\burl\\((?:" + a.source + "|" + /(?:[^\\\r\n()"']|\\[\s\S])*/.source + ")\\)", "i"),
+          greedy: !0,
+          inside: {
+            function: /^url/i,
+            punctuation: /^\(|\)$/,
+            string: {
+              pattern: RegExp("^" + a.source + "$"),
+              alias: "url"
+            }
+          }
+        },
+        selector: {
+          pattern: RegExp(`(^|[{}\\s])[^{}\\s](?:[^{};"'\\s]|\\s+(?![\\s{])|` + a.source + ")*(?=\\s*\\{)"),
+          lookbehind: !0
+        },
+        string: {
+          pattern: a,
+          greedy: !0
+        },
+        property: {
+          pattern: /(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,
+          lookbehind: !0
+        },
+        important: /!important\b/i,
+        function: {
+          pattern: /(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,
+          lookbehind: !0
+        },
+        punctuation: /[(){};:,]/
+      }, s.languages.css.atrule.inside.rest = s.languages.css;
+      var u = s.languages.markup;
+      u && (u.tag.addInlined("style", "css"), u.tag.addAttribute("style", "css"));
+    })(i), i.languages.clike = {
+      comment: [
+        {
+          pattern: /(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,
+          lookbehind: !0,
+          greedy: !0
+        },
+        {
+          pattern: /(^|[^\\:])\/\/.*/,
+          lookbehind: !0,
+          greedy: !0
+        }
+      ],
+      string: {
+        pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
+        greedy: !0
+      },
+      "class-name": {
+        pattern: /(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,
+        lookbehind: !0,
+        inside: {
+          punctuation: /[.\\]/
+        }
+      },
+      keyword: /\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,
+      boolean: /\b(?:false|true)\b/,
+      function: /\b\w+(?=\()/,
+      number: /\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,
+      operator: /[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,
+      punctuation: /[{}[\];(),.:]/
+    }, i.languages.javascript = i.languages.extend("clike", {
+      "class-name": [
+        i.languages.clike["class-name"],
+        {
+          pattern: /(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,
+          lookbehind: !0
+        }
+      ],
+      keyword: [
+        {
+          pattern: /((?:^|\})\s*)catch\b/,
+          lookbehind: !0
+        },
+        {
+          pattern: /(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,
+          lookbehind: !0
+        }
+      ],
+      // Allow for all non-ASCII characters (See http://stackoverflow.com/a/2008444)
+      function: /#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,
+      number: {
+        pattern: RegExp(
+          /(^|[^\w$])/.source + "(?:" + // constant
+          (/NaN|Infinity/.source + "|" + // binary integer
+          /0[bB][01]+(?:_[01]+)*n?/.source + "|" + // octal integer
+          /0[oO][0-7]+(?:_[0-7]+)*n?/.source + "|" + // hexadecimal integer
+          /0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source + "|" + // decimal bigint
+          /\d+(?:_\d+)*n/.source + "|" + // decimal number (integer or float) but no bigint
+          /(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source) + ")" + /(?![\w$])/.source
+        ),
+        lookbehind: !0
+      },
+      operator: /--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/
+    }), i.languages.javascript["class-name"][0].pattern = /(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/, i.languages.insertBefore("javascript", "keyword", {
+      regex: {
+        pattern: RegExp(
+          // lookbehind
+          // eslint-disable-next-line regexp/no-dupe-characters-character-class
+          /((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source + // Regex pattern:
+          // There are 2 regex patterns here. The RegExp set notation proposal added support for nested character
+          // classes if the `v` flag is present. Unfortunately, nested CCs are both context-free and incompatible
+          // with the only syntax, so we have to define 2 different regex patterns.
+          /\//.source + "(?:" + /(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source + "|" + // `v` flag syntax. This supports 3 levels of nested character classes.
+          /(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source + ")" + // lookahead
+          /(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source
+        ),
+        lookbehind: !0,
+        greedy: !0,
+        inside: {
+          "regex-source": {
+            pattern: /^(\/)[\s\S]+(?=\/[a-z]*$)/,
+            lookbehind: !0,
+            alias: "language-regex",
+            inside: i.languages.regex
+          },
+          "regex-delimiter": /^\/|\/$/,
+          "regex-flags": /^[a-z]+$/
+        }
+      },
+      // This must be declared before keyword because we use "function" inside the look-forward
+      "function-variable": {
+        pattern: /#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,
+        alias: "function"
+      },
+      parameter: [
+        {
+          pattern: /(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,
+          lookbehind: !0,
+          inside: i.languages.javascript
+        },
+        {
+          pattern: /(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,
+          lookbehind: !0,
+          inside: i.languages.javascript
+        },
+        {
+          pattern: /(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,
+          lookbehind: !0,
+          inside: i.languages.javascript
+        },
+        {
+          pattern: /((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,
+          lookbehind: !0,
+          inside: i.languages.javascript
+        }
+      ],
+      constant: /\b[A-Z](?:[A-Z_]|\dx?)*\b/
+    }), i.languages.insertBefore("javascript", "string", {
+      hashbang: {
+        pattern: /^#!.*/,
+        greedy: !0,
+        alias: "comment"
+      },
+      "template-string": {
+        pattern: /`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,
+        greedy: !0,
+        inside: {
+          "template-punctuation": {
+            pattern: /^`|`$/,
+            alias: "string"
+          },
+          interpolation: {
+            pattern: /((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,
+            lookbehind: !0,
+            inside: {
+              "interpolation-punctuation": {
+                pattern: /^\$\{|\}$/,
+                alias: "punctuation"
+              },
+              rest: i.languages.javascript
+            }
+          },
+          string: /[\s\S]+/
+        }
+      },
+      "string-property": {
+        pattern: /((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,
+        lookbehind: !0,
+        greedy: !0,
+        alias: "property"
+      }
+    }), i.languages.insertBefore("javascript", "operator", {
+      "literal-property": {
+        pattern: /((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,
+        lookbehind: !0,
+        alias: "property"
+      }
+    }), i.languages.markup && (i.languages.markup.tag.addInlined("script", "javascript"), i.languages.markup.tag.addAttribute(
+      /on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,
+      "javascript"
+    )), i.languages.js = i.languages.javascript, (function() {
+      if (typeof i > "u" || typeof document > "u")
+        return;
+      Element.prototype.matches || (Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector);
+      var s = "Loading…", a = function(C, f) {
+        return "✖ Error " + C + " while fetching file: " + f;
+      }, u = "✖ Error: File does not exist or is empty", l = {
+        js: "javascript",
+        py: "python",
+        rb: "ruby",
+        ps1: "powershell",
+        psm1: "powershell",
+        sh: "bash",
+        bat: "batch",
+        h: "c",
+        tex: "latex"
+      }, d = "data-src-status", m = "loading", S = "loaded", b = "failed", w = "pre[data-src]:not([" + d + '="' + S + '"]):not([' + d + '="' + m + '"])';
+      function $(C, f, v) {
+        var o = new XMLHttpRequest();
+        o.open("GET", C, !0), o.onreadystatechange = function() {
+          o.readyState == 4 && (o.status < 400 && o.responseText ? f(o.responseText) : o.status >= 400 ? v(a(o.status, o.statusText)) : v(u));
+        }, o.send(null);
+      }
+      function E(C) {
+        var f = /^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(C || "");
+        if (f) {
+          var v = Number(f[1]), o = f[2], r = f[3];
+          return o ? r ? [v, Number(r)] : [v, void 0] : [v, v];
+        }
+      }
+      i.hooks.add("before-highlightall", function(C) {
+        C.selector += ", " + w;
+      }), i.hooks.add("before-sanity-check", function(C) {
+        var f = (
+          /** @type {HTMLPreElement} */
+          C.element
+        );
+        if (f.matches(w)) {
+          C.code = "", f.setAttribute(d, m);
+          var v = f.appendChild(document.createElement("CODE"));
+          v.textContent = s;
+          var o = f.getAttribute("data-src"), r = C.language;
+          if (r === "none") {
+            var c = (/\.(\w+)$/.exec(o) || [, "none"])[1];
+            r = l[c] || c;
+          }
+          i.util.setLanguage(v, r), i.util.setLanguage(f, r);
+          var h = i.plugins.autoloader;
+          h && h.loadLanguages(r), $(
+            o,
+            function(p) {
+              f.setAttribute(d, S);
+              var g = E(f.getAttribute("data-range"));
+              if (g) {
+                var y = p.split(/\r\n?|\n/g), n = g[0], k = g[1] == null ? y.length : g[1];
+                n < 0 && (n += y.length), n = Math.max(0, Math.min(n - 1, y.length)), k < 0 && (k += y.length), k = Math.max(0, Math.min(k, y.length)), p = y.slice(n, k).join(`
+`), f.hasAttribute("data-start") || f.setAttribute("data-start", String(n + 1));
+              }
+              v.textContent = p, i.highlightElement(v);
+            },
+            function(p) {
+              f.setAttribute(d, b), v.textContent = p;
+            }
+          );
+        }
+      }), i.plugins.fileHighlight = {
+        /**
+         * Executes the File Highlight plugin for all matching `pre` elements under the given container.
+         *
+         * Note: Elements which are already loaded or currently loading will not be touched by this method.
+         *
+         * @param {ParentNode} [container=document]
+         */
+        highlight: function(f) {
+          for (var v = (f || document).querySelectorAll(w), o = 0, r; r = v[o++]; )
+            i.highlightElement(r);
+        }
+      };
+      var A = !1;
+      i.fileHighlight = function() {
+        A || (console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."), A = !0), i.plugins.fileHighlight.highlight.apply(this, arguments);
+      };
+    })();
+  })(X)), X.exports;
+}
+var ye = fe();
+const z = /* @__PURE__ */ me(ye);
+Prism.languages.markup = {
+  comment: {
+    pattern: /<!--(?:(?!<!--)[\s\S])*?-->/,
+    greedy: !0
+  },
+  prolog: {
+    pattern: /<\?[\s\S]+?\?>/,
+    greedy: !0
+  },
+  doctype: {
+    // https://www.w3.org/TR/xml/#NT-doctypedecl
+    pattern: /<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,
+    greedy: !0,
+    inside: {
+      "internal-subset": {
+        pattern: /(^[^\[]*\[)[\s\S]+(?=\]>$)/,
+        lookbehind: !0,
+        greedy: !0,
+        inside: null
+        // see below
+      },
+      string: {
+        pattern: /"[^"]*"|'[^']*'/,
+        greedy: !0
+      },
+      punctuation: /^<!|>$|[[\]]/,
+      "doctype-tag": /^DOCTYPE/i,
+      name: /[^\s<>'"]+/
+    }
+  },
+  cdata: {
+    pattern: /<!\[CDATA\[[\s\S]*?\]\]>/i,
+    greedy: !0
+  },
+  tag: {
+    pattern: /<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,
+    greedy: !0,
+    inside: {
+      tag: {
+        pattern: /^<\/?[^\s>\/]+/,
+        inside: {
+          punctuation: /^<\/?/,
+          namespace: /^[^\s>\/:]+:/
+        }
+      },
+      "special-attr": [],
+      "attr-value": {
+        pattern: /=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,
+        inside: {
+          punctuation: [
+            {
+              pattern: /^=/,
+              alias: "attr-equals"
+            },
+            {
+              pattern: /^(\s*)["']|["']$/,
+              lookbehind: !0
+            }
+          ]
+        }
+      },
+      punctuation: /\/?>/,
+      "attr-name": {
+        pattern: /[^\s>\/]+/,
+        inside: {
+          namespace: /^[^\s>\/:]+:/
+        }
+      }
+    }
+  },
+  entity: [
+    {
+      pattern: /&[\da-z]{1,8};/i,
+      alias: "named-entity"
+    },
+    /&#x?[\da-f]{1,8};/i
+  ]
+};
+Prism.languages.markup.tag.inside["attr-value"].inside.entity = Prism.languages.markup.entity;
+Prism.languages.markup.doctype.inside["internal-subset"].inside = Prism.languages.markup;
+Prism.hooks.add("wrap", function(e) {
+  e.type === "entity" && (e.attributes.title = e.content.replace(/&amp;/, "&"));
+});
+Object.defineProperty(Prism.languages.markup.tag, "addInlined", {
+  /**
+   * Adds an inlined language to markup.
+   *
+   * An example of an inlined language is CSS with `<style>` tags.
+   *
+   * @param {string} tagName The name of the tag that contains the inlined language. This name will be treated as
+   * case insensitive.
+   * @param {string} lang The language key.
+   * @example
+   * addInlined('style', 'css');
+   */
+  value: function(t, i) {
+    var s = {};
+    s["language-" + i] = {
+      pattern: /(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,
+      lookbehind: !0,
+      inside: Prism.languages[i]
+    }, s.cdata = /^<!\[CDATA\[|\]\]>$/i;
+    var a = {
+      "included-cdata": {
+        pattern: /<!\[CDATA\[[\s\S]*?\]\]>/i,
+        inside: s
+      }
+    };
+    a["language-" + i] = {
+      pattern: /[\s\S]+/,
+      inside: Prism.languages[i]
+    };
+    var u = {};
+    u[t] = {
+      pattern: RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g, function() {
+        return t;
+      }), "i"),
+      lookbehind: !0,
+      greedy: !0,
+      inside: a
+    }, Prism.languages.insertBefore("markup", "cdata", u);
+  }
+});
+Object.defineProperty(Prism.languages.markup.tag, "addAttribute", {
+  /**
+   * Adds an pattern to highlight languages embedded in HTML attributes.
+   *
+   * An example of an inlined language is CSS with `style` attributes.
+   *
+   * @param {string} attrName The name of the tag that contains the inlined language. This name will be treated as
+   * case insensitive.
+   * @param {string} lang The language key.
+   * @example
+   * addAttribute('style', 'css');
+   */
+  value: function(e, t) {
+    Prism.languages.markup.tag.inside["special-attr"].push({
+      pattern: RegExp(
+        /(^|["'\s])/.source + "(?:" + e + ")" + /\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,
+        "i"
+      ),
+      lookbehind: !0,
+      inside: {
+        "attr-name": /^[^\s=]+/,
+        "attr-value": {
+          pattern: /=[\s\S]+/,
+          inside: {
+            value: {
+              pattern: /(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,
+              lookbehind: !0,
+              alias: [t, "language-" + t],
+              inside: Prism.languages[t]
+            },
+            punctuation: [
+              {
+                pattern: /^=/,
+                alias: "attr-equals"
+              },
+              /"|'/
+            ]
+          }
+        }
+      }
+    });
+  }
+});
+Prism.languages.html = Prism.languages.markup;
+Prism.languages.mathml = Prism.languages.markup;
+Prism.languages.svg = Prism.languages.markup;
+Prism.languages.xml = Prism.languages.extend("markup", {});
+Prism.languages.ssml = Prism.languages.xml;
+Prism.languages.atom = Prism.languages.xml;
+Prism.languages.rss = Prism.languages.xml;
+Prism.languages.javascript = Prism.languages.extend("clike", {
+  "class-name": [
+    Prism.languages.clike["class-name"],
+    {
+      pattern: /(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,
+      lookbehind: !0
+    }
+  ],
+  keyword: [
+    {
+      pattern: /((?:^|\})\s*)catch\b/,
+      lookbehind: !0
+    },
+    {
+      pattern: /(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,
+      lookbehind: !0
+    }
+  ],
+  // Allow for all non-ASCII characters (See http://stackoverflow.com/a/2008444)
+  function: /#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,
+  number: {
+    pattern: RegExp(
+      /(^|[^\w$])/.source + "(?:" + // constant
+      (/NaN|Infinity/.source + "|" + // binary integer
+      /0[bB][01]+(?:_[01]+)*n?/.source + "|" + // octal integer
+      /0[oO][0-7]+(?:_[0-7]+)*n?/.source + "|" + // hexadecimal integer
+      /0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source + "|" + // decimal bigint
+      /\d+(?:_\d+)*n/.source + "|" + // decimal number (integer or float) but no bigint
+      /(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source) + ")" + /(?![\w$])/.source
+    ),
+    lookbehind: !0
+  },
+  operator: /--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/
+});
+Prism.languages.javascript["class-name"][0].pattern = /(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/;
+Prism.languages.insertBefore("javascript", "keyword", {
+  regex: {
+    pattern: RegExp(
+      // lookbehind
+      // eslint-disable-next-line regexp/no-dupe-characters-character-class
+      /((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source + // Regex pattern:
+      // There are 2 regex patterns here. The RegExp set notation proposal added support for nested character
+      // classes if the `v` flag is present. Unfortunately, nested CCs are both context-free and incompatible
+      // with the only syntax, so we have to define 2 different regex patterns.
+      /\//.source + "(?:" + /(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source + "|" + // `v` flag syntax. This supports 3 levels of nested character classes.
+      /(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source + ")" + // lookahead
+      /(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source
+    ),
+    lookbehind: !0,
+    greedy: !0,
+    inside: {
+      "regex-source": {
+        pattern: /^(\/)[\s\S]+(?=\/[a-z]*$)/,
+        lookbehind: !0,
+        alias: "language-regex",
+        inside: Prism.languages.regex
+      },
+      "regex-delimiter": /^\/|\/$/,
+      "regex-flags": /^[a-z]+$/
+    }
+  },
+  // This must be declared before keyword because we use "function" inside the look-forward
+  "function-variable": {
+    pattern: /#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,
+    alias: "function"
+  },
+  parameter: [
+    {
+      pattern: /(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,
+      lookbehind: !0,
+      inside: Prism.languages.javascript
+    },
+    {
+      pattern: /(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,
+      lookbehind: !0,
+      inside: Prism.languages.javascript
+    },
+    {
+      pattern: /(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,
+      lookbehind: !0,
+      inside: Prism.languages.javascript
+    },
+    {
+      pattern: /((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,
+      lookbehind: !0,
+      inside: Prism.languages.javascript
+    }
+  ],
+  constant: /\b[A-Z](?:[A-Z_]|\dx?)*\b/
+});
+Prism.languages.insertBefore("javascript", "string", {
+  hashbang: {
+    pattern: /^#!.*/,
+    greedy: !0,
+    alias: "comment"
+  },
+  "template-string": {
+    pattern: /`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,
+    greedy: !0,
+    inside: {
+      "template-punctuation": {
+        pattern: /^`|`$/,
+        alias: "string"
+      },
+      interpolation: {
+        pattern: /((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,
+        lookbehind: !0,
+        inside: {
+          "interpolation-punctuation": {
+            pattern: /^\$\{|\}$/,
+            alias: "punctuation"
+          },
+          rest: Prism.languages.javascript
+        }
+      },
+      string: /[\s\S]+/
+    }
+  },
+  "string-property": {
+    pattern: /((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,
+    lookbehind: !0,
+    greedy: !0,
+    alias: "property"
+  }
+});
+Prism.languages.insertBefore("javascript", "operator", {
+  "literal-property": {
+    pattern: /((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,
+    lookbehind: !0,
+    alias: "property"
+  }
+});
+Prism.languages.markup && (Prism.languages.markup.tag.addInlined("script", "javascript"), Prism.languages.markup.tag.addAttribute(
+  /on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,
+  "javascript"
+));
+Prism.languages.js = Prism.languages.javascript;
+var ie = {}, se;
+function be() {
+  return se || (se = 1, Prism.languages.python = {
+    comment: {
+      pattern: /(^|[^\\])#.*/,
+      lookbehind: !0,
+      greedy: !0
+    },
+    "string-interpolation": {
+      pattern: /(?:f|fr|rf)(?:("""|''')[\s\S]*?\1|("|')(?:\\.|(?!\2)[^\\\r\n])*\2)/i,
+      greedy: !0,
+      inside: {
+        interpolation: {
+          // "{" <expression> <optional "!s", "!r", or "!a"> <optional ":" format specifier> "}"
+          pattern: /((?:^|[^{])(?:\{\{)*)\{(?!\{)(?:[^{}]|\{(?!\{)(?:[^{}]|\{(?!\{)(?:[^{}])+\})+\})+\}/,
+          lookbehind: !0,
+          inside: {
+            "format-spec": {
+              pattern: /(:)[^:(){}]+(?=\}$)/,
+              lookbehind: !0
+            },
+            "conversion-option": {
+              pattern: /![sra](?=[:}]$)/,
+              alias: "punctuation"
+            },
+            rest: null
+          }
+        },
+        string: /[\s\S]+/
+      }
+    },
+    "triple-quoted-string": {
+      pattern: /(?:[rub]|br|rb)?("""|''')[\s\S]*?\1/i,
+      greedy: !0,
+      alias: "string"
+    },
+    string: {
+      pattern: /(?:[rub]|br|rb)?("|')(?:\\.|(?!\1)[^\\\r\n])*\1/i,
+      greedy: !0
+    },
+    function: {
+      pattern: /((?:^|\s)def[ \t]+)[a-zA-Z_]\w*(?=\s*\()/g,
+      lookbehind: !0
+    },
+    "class-name": {
+      pattern: /(\bclass\s+)\w+/i,
+      lookbehind: !0
+    },
+    decorator: {
+      pattern: /(^[\t ]*)@\w+(?:\.\w+)*/m,
+      lookbehind: !0,
+      alias: ["annotation", "punctuation"],
+      inside: {
+        punctuation: /\./
+      }
+    },
+    keyword: /\b(?:_(?=\s*:)|and|as|assert|async|await|break|case|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|match|nonlocal|not|or|pass|print|raise|return|try|while|with|yield)\b/,
+    builtin: /\b(?:__import__|abs|all|any|apply|ascii|basestring|bin|bool|buffer|bytearray|bytes|callable|chr|classmethod|cmp|coerce|compile|complex|delattr|dict|dir|divmod|enumerate|eval|execfile|file|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|intern|isinstance|issubclass|iter|len|list|locals|long|map|max|memoryview|min|next|object|oct|open|ord|pow|property|range|raw_input|reduce|reload|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|unichr|unicode|vars|xrange|zip)\b/,
+    boolean: /\b(?:False|None|True)\b/,
+    number: /\b0(?:b(?:_?[01])+|o(?:_?[0-7])+|x(?:_?[a-f0-9])+)\b|(?:\b\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\B\.\d+(?:_\d+)*)(?:e[+-]?\d+(?:_\d+)*)?j?(?!\w)/i,
+    operator: /[-+%=]=?|!=|:=|\*\*?=?|\/\/?=?|<[<=>]?|>[=>]?|[&|^~]/,
+    punctuation: /[{}[\];(),.:]/
+  }, Prism.languages.python["string-interpolation"].inside.interpolation.inside.rest = Prism.languages.python, Prism.languages.py = Prism.languages.python), ie;
+}
+be();
+(function(e) {
+  var t = "\\b(?:BASH|BASHOPTS|BASH_ALIASES|BASH_ARGC|BASH_ARGV|BASH_CMDS|BASH_COMPLETION_COMPAT_DIR|BASH_LINENO|BASH_REMATCH|BASH_SOURCE|BASH_VERSINFO|BASH_VERSION|COLORTERM|COLUMNS|COMP_WORDBREAKS|DBUS_SESSION_BUS_ADDRESS|DEFAULTS_PATH|DESKTOP_SESSION|DIRSTACK|DISPLAY|EUID|GDMSESSION|GDM_LANG|GNOME_KEYRING_CONTROL|GNOME_KEYRING_PID|GPG_AGENT_INFO|GROUPS|HISTCONTROL|HISTFILE|HISTFILESIZE|HISTSIZE|HOME|HOSTNAME|HOSTTYPE|IFS|INSTANCE|JOB|LANG|LANGUAGE|LC_ADDRESS|LC_ALL|LC_IDENTIFICATION|LC_MEASUREMENT|LC_MONETARY|LC_NAME|LC_NUMERIC|LC_PAPER|LC_TELEPHONE|LC_TIME|LESSCLOSE|LESSOPEN|LINES|LOGNAME|LS_COLORS|MACHTYPE|MAILCHECK|MANDATORY_PATH|NO_AT_BRIDGE|OLDPWD|OPTERR|OPTIND|ORBIT_SOCKETDIR|OSTYPE|PAPERSIZE|PATH|PIPESTATUS|PPID|PS1|PS2|PS3|PS4|PWD|RANDOM|REPLY|SECONDS|SELINUX_INIT|SESSION|SESSIONTYPE|SESSION_MANAGER|SHELL|SHELLOPTS|SHLVL|SSH_AUTH_SOCK|TERM|UID|UPSTART_EVENTS|UPSTART_INSTANCE|UPSTART_JOB|UPSTART_SESSION|USER|WINDOWID|XAUTHORITY|XDG_CONFIG_DIRS|XDG_CURRENT_DESKTOP|XDG_DATA_DIRS|XDG_GREETER_DATA_DIR|XDG_MENU_PREFIX|XDG_RUNTIME_DIR|XDG_SEAT|XDG_SEAT_PATH|XDG_SESSION_DESKTOP|XDG_SESSION_ID|XDG_SESSION_PATH|XDG_SESSION_TYPE|XDG_VTNR|XMODIFIERS)\\b", i = {
+    pattern: /(^(["']?)\w+\2)[ \t]+\S.*/,
+    lookbehind: !0,
+    alias: "punctuation",
+    // this looks reasonably well in all themes
+    inside: null
+    // see below
+  }, s = {
+    bash: i,
+    environment: {
+      pattern: RegExp("\\$" + t),
+      alias: "constant"
+    },
+    variable: [
+      // [0]: Arithmetic Environment
+      {
+        pattern: /\$?\(\([\s\S]+?\)\)/,
+        greedy: !0,
+        inside: {
+          // If there is a $ sign at the beginning highlight $(( and )) as variable
+          variable: [
+            {
+              pattern: /(^\$\(\([\s\S]+)\)\)/,
+              lookbehind: !0
+            },
+            /^\$\(\(/
+          ],
+          number: /\b0x[\dA-Fa-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:[Ee]-?\d+)?/,
+          // Operators according to https://www.gnu.org/software/bash/manual/bashref.html#Shell-Arithmetic
+          operator: /--|\+\+|\*\*=?|<<=?|>>=?|&&|\|\||[=!+\-*/%<>^&|]=?|[?~:]/,
+          // If there is no $ sign at the beginning highlight (( and )) as punctuation
+          punctuation: /\(\(?|\)\)?|,|;/
+        }
+      },
+      // [1]: Command Substitution
+      {
+        pattern: /\$\((?:\([^)]+\)|[^()])+\)|`[^`]+`/,
+        greedy: !0,
+        inside: {
+          variable: /^\$\(|^`|\)$|`$/
+        }
+      },
+      // [2]: Brace expansion
+      {
+        pattern: /\$\{[^}]+\}/,
+        greedy: !0,
+        inside: {
+          operator: /:[-=?+]?|[!\/]|##?|%%?|\^\^?|,,?/,
+          punctuation: /[\[\]]/,
+          environment: {
+            pattern: RegExp("(\\{)" + t),
+            lookbehind: !0,
+            alias: "constant"
+          }
+        }
+      },
+      /\$(?:\w+|[#?*!@$])/
+    ],
+    // Escape sequences from echo and printf's manuals, and escaped quotes.
+    entity: /\\(?:[abceEfnrtv\\"]|O?[0-7]{1,3}|U[0-9a-fA-F]{8}|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{1,2})/
+  };
+  e.languages.bash = {
+    shebang: {
+      pattern: /^#!\s*\/.*/,
+      alias: "important"
+    },
+    comment: {
+      pattern: /(^|[^"{\\$])#.*/,
+      lookbehind: !0
+    },
+    "function-name": [
+      // a) function foo {
+      // b) foo() {
+      // c) function foo() {
+      // but not “foo {”
+      {
+        // a) and c)
+        pattern: /(\bfunction\s+)[\w-]+(?=(?:\s*\(?:\s*\))?\s*\{)/,
+        lookbehind: !0,
+        alias: "function"
+      },
+      {
+        // b)
+        pattern: /\b[\w-]+(?=\s*\(\s*\)\s*\{)/,
+        alias: "function"
+      }
+    ],
+    // Highlight variable names as variables in for and select beginnings.
+    "for-or-select": {
+      pattern: /(\b(?:for|select)\s+)\w+(?=\s+in\s)/,
+      alias: "variable",
+      lookbehind: !0
+    },
+    // Highlight variable names as variables in the left-hand part
+    // of assignments (“=” and “+=”).
+    "assign-left": {
+      pattern: /(^|[\s;|&]|[<>]\()\w+(?:\.\w+)*(?=\+?=)/,
+      inside: {
+        environment: {
+          pattern: RegExp("(^|[\\s;|&]|[<>]\\()" + t),
+          lookbehind: !0,
+          alias: "constant"
+        }
+      },
+      alias: "variable",
+      lookbehind: !0
+    },
+    // Highlight parameter names as variables
+    parameter: {
+      pattern: /(^|\s)-{1,2}(?:\w+:[+-]?)?\w+(?:\.\w+)*(?=[=\s]|$)/,
+      alias: "variable",
+      lookbehind: !0
+    },
+    string: [
+      // Support for Here-documents https://en.wikipedia.org/wiki/Here_document
+      {
+        pattern: /((?:^|[^<])<<-?\s*)(\w+)\s[\s\S]*?(?:\r?\n|\r)\2/,
+        lookbehind: !0,
+        greedy: !0,
+        inside: s
+      },
+      // Here-document with quotes around the tag
+      // → No expansion (so no “inside”).
+      {
+        pattern: /((?:^|[^<])<<-?\s*)(["'])(\w+)\2\s[\s\S]*?(?:\r?\n|\r)\3/,
+        lookbehind: !0,
+        greedy: !0,
+        inside: {
+          bash: i
+        }
+      },
+      // “Normal” string
+      {
+        // https://www.gnu.org/software/bash/manual/html_node/Double-Quotes.html
+        pattern: /(^|[^\\](?:\\\\)*)"(?:\\[\s\S]|\$\([^)]+\)|\$(?!\()|`[^`]+`|[^"\\`$])*"/,
+        lookbehind: !0,
+        greedy: !0,
+        inside: s
+      },
+      {
+        // https://www.gnu.org/software/bash/manual/html_node/Single-Quotes.html
+        pattern: /(^|[^$\\])'[^']*'/,
+        lookbehind: !0,
+        greedy: !0
+      },
+      {
+        // https://www.gnu.org/software/bash/manual/html_node/ANSI_002dC-Quoting.html
+        pattern: /\$'(?:[^'\\]|\\[\s\S])*'/,
+        greedy: !0,
+        inside: {
+          entity: s.entity
+        }
+      }
+    ],
+    environment: {
+      pattern: RegExp("\\$?" + t),
+      alias: "constant"
+    },
+    variable: s.variable,
+    function: {
+      pattern: /(^|[\s;|&]|[<>]\()(?:add|apropos|apt|apt-cache|apt-get|aptitude|aspell|automysqlbackup|awk|basename|bash|bc|bconsole|bg|bzip2|cal|cargo|cat|cfdisk|chgrp|chkconfig|chmod|chown|chroot|cksum|clear|cmp|column|comm|composer|cp|cron|crontab|csplit|curl|cut|date|dc|dd|ddrescue|debootstrap|df|diff|diff3|dig|dir|dircolors|dirname|dirs|dmesg|docker|docker-compose|du|egrep|eject|env|ethtool|expand|expect|expr|fdformat|fdisk|fg|fgrep|file|find|fmt|fold|format|free|fsck|ftp|fuser|gawk|git|gparted|grep|groupadd|groupdel|groupmod|groups|grub-mkconfig|gzip|halt|head|hg|history|host|hostname|htop|iconv|id|ifconfig|ifdown|ifup|import|install|ip|java|jobs|join|kill|killall|less|link|ln|locate|logname|logrotate|look|lpc|lpr|lprint|lprintd|lprintq|lprm|ls|lsof|lynx|make|man|mc|mdadm|mkconfig|mkdir|mke2fs|mkfifo|mkfs|mkisofs|mknod|mkswap|mmv|more|most|mount|mtools|mtr|mutt|mv|nano|nc|netstat|nice|nl|node|nohup|notify-send|npm|nslookup|op|open|parted|passwd|paste|pathchk|ping|pkill|pnpm|podman|podman-compose|popd|pr|printcap|printenv|ps|pushd|pv|quota|quotacheck|quotactl|ram|rar|rcp|reboot|remsync|rename|renice|rev|rm|rmdir|rpm|rsync|scp|screen|sdiff|sed|sendmail|seq|service|sftp|sh|shellcheck|shuf|shutdown|sleep|slocate|sort|split|ssh|stat|strace|su|sudo|sum|suspend|swapon|sync|sysctl|tac|tail|tar|tee|time|timeout|top|touch|tr|traceroute|tsort|tty|umount|uname|unexpand|uniq|units|unrar|unshar|unzip|update-grub|uptime|useradd|userdel|usermod|users|uudecode|uuencode|v|vcpkg|vdir|vi|vim|virsh|vmstat|wait|watch|wc|wget|whereis|which|who|whoami|write|xargs|xdg-open|yarn|yes|zenity|zip|zsh|zypper)(?=$|[)\s;|&])/,
+      lookbehind: !0
+    },
+    keyword: {
+      pattern: /(^|[\s;|&]|[<>]\()(?:case|do|done|elif|else|esac|fi|for|function|if|in|select|then|until|while)(?=$|[)\s;|&])/,
+      lookbehind: !0
+    },
+    // https://www.gnu.org/software/bash/manual/html_node/Shell-Builtin-Commands.html
+    builtin: {
+      pattern: /(^|[\s;|&]|[<>]\()(?:\.|:|alias|bind|break|builtin|caller|cd|command|continue|declare|echo|enable|eval|exec|exit|export|getopts|hash|help|let|local|logout|mapfile|printf|pwd|read|readarray|readonly|return|set|shift|shopt|source|test|times|trap|type|typeset|ulimit|umask|unalias|unset)(?=$|[)\s;|&])/,
+      lookbehind: !0,
+      // Alias added to make those easier to distinguish from strings.
+      alias: "class-name"
+    },
+    boolean: {
+      pattern: /(^|[\s;|&]|[<>]\()(?:false|true)(?=$|[)\s;|&])/,
+      lookbehind: !0
+    },
+    "file-descriptor": {
+      pattern: /\B&\d\b/,
+      alias: "important"
+    },
+    operator: {
+      // Lots of redirections here, but not just that.
+      pattern: /\d?<>|>\||\+=|=[=~]?|!=?|<<[<-]?|[&\d]?>>|\d[<>]&?|[<>][&=]?|&[>&]?|\|[&|]?/,
+      inside: {
+        "file-descriptor": {
+          pattern: /^\d/,
+          alias: "important"
+        }
+      }
+    },
+    punctuation: /\$?\(\(?|\)\)?|\.\.|[{}[\];\\]/,
+    number: {
+      pattern: /(^|\s)(?:[1-9]\d*|0)(?:[.,]\d+)?\b/,
+      lookbehind: !0
+    }
+  }, i.inside = e.languages.bash;
+  for (var a = [
+    "comment",
+    "function-name",
+    "for-or-select",
+    "assign-left",
+    "parameter",
+    "string",
+    "environment",
+    "function",
+    "keyword",
+    "builtin",
+    "boolean",
+    "file-descriptor",
+    "operator",
+    "punctuation",
+    "number"
+  ], u = s.variable[1].inside, l = 0; l < a.length; l++)
+    u[a[l]] = e.languages.bash[a[l]];
+  e.languages.sh = e.languages.bash, e.languages.shell = e.languages.bash;
+})(Prism);
+Prism.languages.json = {
+  property: {
+    pattern: /(^|[^\\])"(?:\\.|[^\\"\r\n])*"(?=\s*:)/,
+    lookbehind: !0,
+    greedy: !0
+  },
+  string: {
+    pattern: /(^|[^\\])"(?:\\.|[^\\"\r\n])*"(?!\s*:)/,
+    lookbehind: !0,
+    greedy: !0
+  },
+  comment: {
+    pattern: /\/\/.*|\/\*[\s\S]*?(?:\*\/|$)/,
+    greedy: !0
+  },
+  number: /-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b/i,
+  punctuation: /[{}[\],]/,
+  operator: /:/,
+  boolean: /\b(?:false|true)\b/,
+  null: {
+    pattern: /\bnull\b/,
+    alias: "keyword"
+  }
+};
+Prism.languages.webmanifest = Prism.languages.json;
+(function(e) {
+  var t = /(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;
+  e.languages.css = {
+    comment: /\/\*[\s\S]*?\*\//,
+    atrule: {
+      pattern: RegExp("@[\\w-](?:" + /[^;{\s"']|\s+(?!\s)/.source + "|" + t.source + ")*?" + /(?:;|(?=\s*\{))/.source),
+      inside: {
+        rule: /^@[\w-]+/,
+        "selector-function-argument": {
+          pattern: /(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,
+          lookbehind: !0,
+          alias: "selector"
+        },
+        keyword: {
+          pattern: /(^|[^\w-])(?:and|not|only|or)(?![\w-])/,
+          lookbehind: !0
+        }
+        // See rest below
+      }
+    },
+    url: {
+      // https://drafts.csswg.org/css-values-3/#urls
+      pattern: RegExp("\\burl\\((?:" + t.source + "|" + /(?:[^\\\r\n()"']|\\[\s\S])*/.source + ")\\)", "i"),
+      greedy: !0,
+      inside: {
+        function: /^url/i,
+        punctuation: /^\(|\)$/,
+        string: {
+          pattern: RegExp("^" + t.source + "$"),
+          alias: "url"
+        }
+      }
+    },
+    selector: {
+      pattern: RegExp(`(^|[{}\\s])[^{}\\s](?:[^{};"'\\s]|\\s+(?![\\s{])|` + t.source + ")*(?=\\s*\\{)"),
+      lookbehind: !0
+    },
+    string: {
+      pattern: t,
+      greedy: !0
+    },
+    property: {
+      pattern: /(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,
+      lookbehind: !0
+    },
+    important: /!important\b/i,
+    function: {
+      pattern: /(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,
+      lookbehind: !0
+    },
+    punctuation: /[(){};:,]/
+  }, e.languages.css.atrule.inside.rest = e.languages.css;
+  var i = e.languages.markup;
+  i && (i.tag.addInlined("style", "css"), i.tag.addAttribute("style", "css"));
+})(Prism);
+(function(e) {
+  var t = /(?:\\.|[^\\\n\r]|(?:\n|\r\n?)(?![\r\n]))/.source;
+  function i(b) {
+    return b = b.replace(/<inner>/g, function() {
+      return t;
+    }), RegExp(/((?:^|[^\\])(?:\\{2})*)/.source + "(?:" + b + ")");
+  }
+  var s = /(?:\\.|``(?:[^`\r\n]|`(?!`))+``|`[^`\r\n]+`|[^\\|\r\n`])+/.source, a = /\|?__(?:\|__)+\|?(?:(?:\n|\r\n?)|(?![\s\S]))/.source.replace(/__/g, function() {
+    return s;
+  }), u = /\|?[ \t]*:?-{3,}:?[ \t]*(?:\|[ \t]*:?-{3,}:?[ \t]*)+\|?(?:\n|\r\n?)/.source;
+  e.languages.markdown = e.languages.extend("markup", {}), e.languages.insertBefore("markdown", "prolog", {
+    "front-matter-block": {
+      pattern: /(^(?:\s*[\r\n])?)---(?!.)[\s\S]*?[\r\n]---(?!.)/,
+      lookbehind: !0,
+      greedy: !0,
+      inside: {
+        punctuation: /^---|---$/,
+        "front-matter": {
+          pattern: /\S+(?:\s+\S+)*/,
+          alias: ["yaml", "language-yaml"],
+          inside: e.languages.yaml
+        }
+      }
+    },
+    blockquote: {
+      // > ...
+      pattern: /^>(?:[\t ]*>)*/m,
+      alias: "punctuation"
+    },
+    table: {
+      pattern: RegExp("^" + a + u + "(?:" + a + ")*", "m"),
+      inside: {
+        "table-data-rows": {
+          pattern: RegExp("^(" + a + u + ")(?:" + a + ")*$"),
+          lookbehind: !0,
+          inside: {
+            "table-data": {
+              pattern: RegExp(s),
+              inside: e.languages.markdown
+            },
+            punctuation: /\|/
+          }
+        },
+        "table-line": {
+          pattern: RegExp("^(" + a + ")" + u + "$"),
+          lookbehind: !0,
+          inside: {
+            punctuation: /\||:?-{3,}:?/
+          }
+        },
+        "table-header-row": {
+          pattern: RegExp("^" + a + "$"),
+          inside: {
+            "table-header": {
+              pattern: RegExp(s),
+              alias: "important",
+              inside: e.languages.markdown
+            },
+            punctuation: /\|/
+          }
+        }
+      }
+    },
+    code: [
+      {
+        // Prefixed by 4 spaces or 1 tab and preceded by an empty line
+        pattern: /((?:^|\n)[ \t]*\n|(?:^|\r\n?)[ \t]*\r\n?)(?: {4}|\t).+(?:(?:\n|\r\n?)(?: {4}|\t).+)*/,
+        lookbehind: !0,
+        alias: "keyword"
+      },
+      {
+        // ```optional language
+        // code block
+        // ```
+        pattern: /^```[\s\S]*?^```$/m,
+        greedy: !0,
+        inside: {
+          "code-block": {
+            pattern: /^(```.*(?:\n|\r\n?))[\s\S]+?(?=(?:\n|\r\n?)^```$)/m,
+            lookbehind: !0
+          },
+          "code-language": {
+            pattern: /^(```).+/,
+            lookbehind: !0
+          },
+          punctuation: /```/
+        }
+      }
+    ],
+    title: [
+      {
+        // title 1
+        // =======
+        // title 2
+        // -------
+        pattern: /\S.*(?:\n|\r\n?)(?:==+|--+)(?=[ \t]*$)/m,
+        alias: "important",
+        inside: {
+          punctuation: /==+$|--+$/
+        }
+      },
+      {
+        // # title 1
+        // ###### title 6
+        pattern: /(^\s*)#.+/m,
+        lookbehind: !0,
+        alias: "important",
+        inside: {
+          punctuation: /^#+|#+$/
+        }
+      }
+    ],
+    hr: {
+      // ***
+      // ---
+      // * * *
+      // -----------
+      pattern: /(^\s*)([*-])(?:[\t ]*\2){2,}(?=\s*$)/m,
+      lookbehind: !0,
+      alias: "punctuation"
+    },
+    list: {
+      // * item
+      // + item
+      // - item
+      // 1. item
+      pattern: /(^\s*)(?:[*+-]|\d+\.)(?=[\t ].)/m,
+      lookbehind: !0,
+      alias: "punctuation"
+    },
+    "url-reference": {
+      // [id]: http://example.com "Optional title"
+      // [id]: http://example.com 'Optional title'
+      // [id]: http://example.com (Optional title)
+      // [id]: <http://example.com> "Optional title"
+      pattern: /!?\[[^\]]+\]:[\t ]+(?:\S+|<(?:\\.|[^>\\])+>)(?:[\t ]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?/,
+      inside: {
+        variable: {
+          pattern: /^(!?\[)[^\]]+/,
+          lookbehind: !0
+        },
+        string: /(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\))$/,
+        punctuation: /^[\[\]!:]|[<>]/
+      },
+      alias: "url"
+    },
+    bold: {
+      // **strong**
+      // __strong__
+      // allow one nested instance of italic text using the same delimiter
+      pattern: i(/\b__(?:(?!_)<inner>|_(?:(?!_)<inner>)+_)+__\b|\*\*(?:(?!\*)<inner>|\*(?:(?!\*)<inner>)+\*)+\*\*/.source),
+      lookbehind: !0,
+      greedy: !0,
+      inside: {
+        content: {
+          pattern: /(^..)[\s\S]+(?=..$)/,
+          lookbehind: !0,
+          inside: {}
+          // see below
+        },
+        punctuation: /\*\*|__/
+      }
+    },
+    italic: {
+      // *em*
+      // _em_
+      // allow one nested instance of bold text using the same delimiter
+      pattern: i(/\b_(?:(?!_)<inner>|__(?:(?!_)<inner>)+__)+_\b|\*(?:(?!\*)<inner>|\*\*(?:(?!\*)<inner>)+\*\*)+\*/.source),
+      lookbehind: !0,
+      greedy: !0,
+      inside: {
+        content: {
+          pattern: /(^.)[\s\S]+(?=.$)/,
+          lookbehind: !0,
+          inside: {}
+          // see below
+        },
+        punctuation: /[*_]/
+      }
+    },
+    strike: {
+      // ~~strike through~~
+      // ~strike~
+      // eslint-disable-next-line regexp/strict
+      pattern: i(/(~~?)(?:(?!~)<inner>)+\2/.source),
+      lookbehind: !0,
+      greedy: !0,
+      inside: {
+        content: {
+          pattern: /(^~~?)[\s\S]+(?=\1$)/,
+          lookbehind: !0,
+          inside: {}
+          // see below
+        },
+        punctuation: /~~?/
+      }
+    },
+    "code-snippet": {
+      // `code`
+      // ``code``
+      pattern: /(^|[^\\`])(?:``[^`\r\n]+(?:`[^`\r\n]+)*``(?!`)|`[^`\r\n]+`(?!`))/,
+      lookbehind: !0,
+      greedy: !0,
+      alias: ["code", "keyword"]
+    },
+    url: {
+      // [example](http://example.com "Optional title")
+      // [example][id]
+      // [example] [id]
+      pattern: i(/!?\[(?:(?!\])<inner>)+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)|[ \t]?\[(?:(?!\])<inner>)+\])/.source),
+      lookbehind: !0,
+      greedy: !0,
+      inside: {
+        operator: /^!/,
+        content: {
+          pattern: /(^\[)[^\]]+(?=\])/,
+          lookbehind: !0,
+          inside: {}
+          // see below
+        },
+        variable: {
+          pattern: /(^\][ \t]?\[)[^\]]+(?=\]$)/,
+          lookbehind: !0
+        },
+        url: {
+          pattern: /(^\]\()[^\s)]+/,
+          lookbehind: !0
+        },
+        string: {
+          pattern: /(^[ \t]+)"(?:\\.|[^"\\])*"(?=\)$)/,
+          lookbehind: !0
+        }
+      }
+    }
+  }), ["url", "bold", "italic", "strike"].forEach(function(b) {
+    ["url", "bold", "italic", "strike", "code-snippet"].forEach(function(w) {
+      b !== w && (e.languages.markdown[b].inside.content.inside[w] = e.languages.markdown[w]);
+    });
+  }), e.hooks.add("after-tokenize", function(b) {
+    if (b.language !== "markdown" && b.language !== "md")
+      return;
+    function w($) {
+      if (!(!$ || typeof $ == "string"))
+        for (var E = 0, A = $.length; E < A; E++) {
+          var C = $[E];
+          if (C.type !== "code") {
+            w(C.content);
+            continue;
+          }
+          var f = C.content[1], v = C.content[3];
+          if (f && v && f.type === "code-language" && v.type === "code-block" && typeof f.content == "string") {
+            var o = f.content.replace(/\b#/g, "sharp").replace(/\b\+\+/g, "pp");
+            o = (/[a-z][\w-]*/i.exec(o) || [""])[0].toLowerCase();
+            var r = "language-" + o;
+            v.alias ? typeof v.alias == "string" ? v.alias = [v.alias, r] : v.alias.push(r) : v.alias = [r];
+          }
+        }
+    }
+    w(b.tokens);
+  }), e.hooks.add("wrap", function(b) {
+    if (b.type === "code-block") {
+      for (var w = "", $ = 0, E = b.classes.length; $ < E; $++) {
+        var A = b.classes[$], C = /language-(.+)/.exec(A);
+        if (C) {
+          w = C[1];
+          break;
+        }
+      }
+      var f = e.languages[w];
+      if (f)
+        b.content = e.highlight(S(b.content), f, w);
+      else if (w && w !== "none" && e.plugins.autoloader) {
+        var v = "md-" + (/* @__PURE__ */ new Date()).valueOf() + "-" + Math.floor(Math.random() * 1e16);
+        b.attributes.id = v, e.plugins.autoloader.loadLanguages(w, function() {
+          var o = document.getElementById(v);
+          o && (o.innerHTML = e.highlight(o.textContent, e.languages[w], w));
+        });
+      }
+    }
+  });
+  var l = RegExp(e.languages.markup.tag.pattern.source, "gi"), d = {
+    amp: "&",
+    lt: "<",
+    gt: ">",
+    quot: '"'
+  }, m = String.fromCodePoint || String.fromCharCode;
+  function S(b) {
+    var w = b.replace(l, "");
+    return w = w.replace(/&(\w{1,8}|#x?[\da-f]{1,8});/gi, function($, E) {
+      if (E = E.toLowerCase(), E[0] === "#") {
+        var A;
+        return E[1] === "x" ? A = parseInt(E.slice(2), 16) : A = Number(E.slice(1)), m(A);
+      } else {
+        var C = d[E];
+        return C || $;
+      }
+    }), w;
+  }
+  e.languages.md = e.languages.markdown;
+})(Prism);
+(function(e) {
+  var t = /\\(?:[^a-z()[\]]|[a-z*]+)/i, i = {
+    "equation-command": {
+      pattern: t,
+      alias: "regex"
+    }
+  };
+  e.languages.latex = {
+    comment: /%.*/,
+    // the verbatim environment prints whitespace to the document
+    cdata: {
+      pattern: /(\\begin\{((?:lstlisting|verbatim)\*?)\})[\s\S]*?(?=\\end\{\2\})/,
+      lookbehind: !0
+    },
+    /*
+     * equations can be between $$ $$ or $ $ or \( \) or \[ \]
+     * (all are multiline)
+     */
+    equation: [
+      {
+        pattern: /\$\$(?:\\[\s\S]|[^\\$])+\$\$|\$(?:\\[\s\S]|[^\\$])+\$|\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\]/,
+        inside: i,
+        alias: "string"
+      },
+      {
+        pattern: /(\\begin\{((?:align|eqnarray|equation|gather|math|multline)\*?)\})[\s\S]*?(?=\\end\{\2\})/,
+        lookbehind: !0,
+        inside: i,
+        alias: "string"
+      }
+    ],
+    /*
+     * arguments which are keywords or references are highlighted
+     * as keywords
+     */
+    keyword: {
+      pattern: /(\\(?:begin|cite|documentclass|end|label|ref|usepackage)(?:\[[^\]]+\])?\{)[^}]+(?=\})/,
+      lookbehind: !0
+    },
+    url: {
+      pattern: /(\\url\{)[^}]+(?=\})/,
+      lookbehind: !0
+    },
+    /*
+     * section or chapter headlines are highlighted as bold so that
+     * they stand out more
+     */
+    headline: {
+      pattern: /(\\(?:chapter|frametitle|paragraph|part|section|subparagraph|subsection|subsubparagraph|subsubsection|subsubsubparagraph)\*?(?:\[[^\]]+\])?\{)[^}]+(?=\})/,
+      lookbehind: !0,
+      alias: "class-name"
+    },
+    function: {
+      pattern: t,
+      alias: "selector"
+    },
+    punctuation: /[[\]{}&]/
+  }, e.languages.tex = e.languages.latex, e.languages.context = e.languages.latex;
+})(Prism);
+var ne = {}, ae;
+function we() {
+  return ae || (ae = 1, (function(e) {
+    for (var t = /\/\*(?:[^*/]|\*(?!\/)|\/(?!\*)|<self>)*\*\//.source, i = 0; i < 2; i++)
+      t = t.replace(/<self>/g, function() {
+        return t;
+      });
+    t = t.replace(/<self>/g, function() {
+      return /[^\s\S]/.source;
+    }), e.languages.rust = {
+      comment: [
+        {
+          pattern: RegExp(/(^|[^\\])/.source + t),
+          lookbehind: !0,
+          greedy: !0
+        },
+        {
+          pattern: /(^|[^\\:])\/\/.*/,
+          lookbehind: !0,
+          greedy: !0
+        }
+      ],
+      string: {
+        pattern: /b?"(?:\\[\s\S]|[^\\"])*"|b?r(#*)"(?:[^"]|"(?!\1))*"\1/,
+        greedy: !0
+      },
+      char: {
+        pattern: /b?'(?:\\(?:x[0-7][\da-fA-F]|u\{(?:[\da-fA-F]_*){1,6}\}|.)|[^\\\r\n\t'])'/,
+        greedy: !0
+      },
+      attribute: {
+        pattern: /#!?\[(?:[^\[\]"]|"(?:\\[\s\S]|[^\\"])*")*\]/,
+        greedy: !0,
+        alias: "attr-name",
+        inside: {
+          string: null
+          // see below
+        }
+      },
+      // Closure params should not be confused with bitwise OR |
+      "closure-params": {
+        pattern: /([=(,:]\s*|\bmove\s*)\|[^|]*\||\|[^|]*\|(?=\s*(?:\{|->))/,
+        lookbehind: !0,
+        greedy: !0,
+        inside: {
+          "closure-punctuation": {
+            pattern: /^\||\|$/,
+            alias: "punctuation"
+          },
+          rest: null
+          // see below
+        }
+      },
+      "lifetime-annotation": {
+        pattern: /'\w+/,
+        alias: "symbol"
+      },
+      "fragment-specifier": {
+        pattern: /(\$\w+:)[a-z]+/,
+        lookbehind: !0,
+        alias: "punctuation"
+      },
+      variable: /\$\w+/,
+      "function-definition": {
+        pattern: /(\bfn\s+)\w+/,
+        lookbehind: !0,
+        alias: "function"
+      },
+      "type-definition": {
+        pattern: /(\b(?:enum|struct|trait|type|union)\s+)\w+/,
+        lookbehind: !0,
+        alias: "class-name"
+      },
+      "module-declaration": [
+        {
+          pattern: /(\b(?:crate|mod)\s+)[a-z][a-z_\d]*/,
+          lookbehind: !0,
+          alias: "namespace"
+        },
+        {
+          pattern: /(\b(?:crate|self|super)\s*)::\s*[a-z][a-z_\d]*\b(?:\s*::(?:\s*[a-z][a-z_\d]*\s*::)*)?/,
+          lookbehind: !0,
+          alias: "namespace",
+          inside: {
+            punctuation: /::/
+          }
+        }
+      ],
+      keyword: [
+        // https://github.com/rust-lang/reference/blob/master/src/keywords.md
+        /\b(?:Self|abstract|as|async|await|become|box|break|const|continue|crate|do|dyn|else|enum|extern|final|fn|for|if|impl|in|let|loop|macro|match|mod|move|mut|override|priv|pub|ref|return|self|static|struct|super|trait|try|type|typeof|union|unsafe|unsized|use|virtual|where|while|yield)\b/,
+        // primitives and str
+        // https://doc.rust-lang.org/stable/rust-by-example/primitives.html
+        /\b(?:bool|char|f(?:32|64)|[ui](?:8|16|32|64|128|size)|str)\b/
+      ],
+      // functions can technically start with an upper-case letter, but this will introduce a lot of false positives
+      // and Rust's naming conventions recommend snake_case anyway.
+      // https://doc.rust-lang.org/1.0.0/style/style/naming/README.html
+      function: /\b[a-z_]\w*(?=\s*(?:::\s*<|\())/,
+      macro: {
+        pattern: /\b\w+!/,
+        alias: "property"
+      },
+      constant: /\b[A-Z_][A-Z_\d]+\b/,
+      "class-name": /\b[A-Z]\w*\b/,
+      namespace: {
+        pattern: /(?:\b[a-z][a-z_\d]*\s*::\s*)*\b[a-z][a-z_\d]*\s*::(?!\s*<)/,
+        inside: {
+          punctuation: /::/
+        }
+      },
+      // Hex, oct, bin, dec numbers with visual separators and type suffix
+      number: /\b(?:0x[\dA-Fa-f](?:_?[\dA-Fa-f])*|0o[0-7](?:_?[0-7])*|0b[01](?:_?[01])*|(?:(?:\d(?:_?\d)*)?\.)?\d(?:_?\d)*(?:[Ee][+-]?\d+)?)(?:_?(?:f32|f64|[iu](?:8|16|32|64|size)?))?\b/,
+      boolean: /\b(?:false|true)\b/,
+      punctuation: /->|\.\.=|\.{1,3}|::|[{}[\];(),:]/,
+      operator: /[-+*\/%!^]=?|=[=>]?|&[&=]?|\|[|=]?|<<?=?|>>?=?|[@?]/
+    }, e.languages.rust["closure-params"].inside.rest = e.languages.rust, e.languages.rust.attribute.inside.string = e.languages.rust.string;
+  })(Prism)), ne;
+}
+we();
+function oe(e) {
+  return e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function O(e) {
+  try {
+    return JSON.parse(e);
+  } catch {
+    return null;
+  }
+}
+function re(e) {
+  return {
+    markup: "html",
+    css: "css",
+    javascript: "js",
+    python: "py",
+    json: "json",
+    markdown: "md",
+    html: "html"
+  }[e] || "txt";
+}
+const ve = {
+  methods: {
+    async runLoadPyodide() {
+      this.selectedLanguage === "python" && await this.loadPyodide();
+    },
+    async loadPyodide() {
+      if (this.pyodide)
+        return this.pyodide;
+      if (typeof globalThis.loadPyodide == "function") {
+        this.runOutput = `Initializing Python runtime...
+`;
+        const t = await globalThis.loadPyodide({
+          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+        });
+        return this.setupPyodide(t);
+      }
+      if (!document.querySelector('script[src*="pyodide.js"]')) {
+        this.runOutput = `Downloading Pyodide (~20MB, one-time only)...
+`;
+        const t = document.createElement("script");
+        t.src = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js", document.head.appendChild(t), await new Promise((i, s) => {
+          t.onload = () => {
+            const a = () => {
+              typeof globalThis.loadPyodide == "function" ? i() : setTimeout(a, 100);
+            };
+            a();
+          }, t.onerror = () => s(new Error("Failed to load pyodide.js"));
+        });
+      }
+      this.runOutput = `Initializing Python runtime...
+`;
+      const e = await globalThis.loadPyodide({
+        indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+      });
+      return this.setupPyodide(e);
+    },
+    // Extract setup code so it's reusable
+    setupPyodide(e) {
+      return this.pyodide = e, e.runPython(`
+import sys
+from js import captured_output
+
+class OutputCapture:
+    def __init__(self):
+        self.buffer = ""
+    def write(self, text):
+        if text == "\\n":
+            if self.buffer:
+                captured_output.append(self.buffer)
+            self.buffer = ""
+        else:
+            self.buffer += text
+        return len(text)
+    def flush(self):
+        if self.buffer:
+            captured_output.append(self.buffer)
+        self.buffer = ""
+
+sys.stdout = OutputCapture()
+sys.stderr = OutputCapture()
+  `), e;
+    },
+    captureConsole() {
+      const e = [], t = console.log;
+      return console.log = (...i) => {
+        e.push(i.map(String).join(" ")), t.apply(console, i);
+      }, { logs: e, restore: () => console.log = t };
+    }
+  }
+}, ke = {
+  data() {
+    return {
+      history: [],
+      historyIndex: -1,
+      maxHistory: 50
+    };
+  },
+  computed: {
+    canUndo() {
+      return this.historyIndex > 0;
+    },
+    canRedo() {
+      return this.historyIndex < this.history.length - 1;
+    }
+  },
+  methods: {
+    addToHistory() {
+      if (this.isUndoOrRedo) return;
+      const e = this.editCode, t = this.history[this.historyIndex];
+      e !== t && (this.historyIndex < this.history.length - 1 && (this.history = this.history.slice(0, this.historyIndex + 1)), this.history.push(e), this.historyIndex = this.history.length - 1, this.history.length > this.maxHistory && (this.history.shift(), this.historyIndex--));
+    },
+    undo() {
+      this.historyIndex <= 0 || (this.isUndoOrRedo = !0, this.historyIndex--, this.editCode = this.history[this.historyIndex], this.useMonaco && this.monacoEditor && this.monacoEditor.setValue(this.editCode), this.$nextTick(() => {
+        this.isUndoOrRedo = !1;
+      }));
+    },
+    redo() {
+      this.historyIndex >= this.history.length - 1 || (this.isUndoOrRedo = !0, this.historyIndex++, this.editCode = this.history[this.historyIndex], this.useMonaco && this.monacoEditor && this.monacoEditor.setValue(this.editCode), this.$nextTick(() => {
+        this.isUndoOrRedo = !1;
+      }));
+    }
+  }
+}, Ce = {
+  methods: {
+    toggleMonacoTheme() {
+      this.monacoTheme = this.monacoTheme === "vs-dark" ? "light" : "vs-dark", this.$nextTick(() => this.monacoKey++);
+    },
+    toggleMonacoSettings() {
+      this.showMonacoSettings = !this.showMonacoSettings;
+    },
+    onMonacoMounted(e) {
+      this.monacoEditor = e;
+      const t = e.getModel();
+      t && t.onDidChangeContent(() => {
+        const i = e.getValue();
+        i !== this.editCode && (this.editCode = i);
+      }), this.$nextTick(() => {
+        this.savedScroll && (e.setScrollTop(this.savedScroll), this.savedScroll = 0), e.layout();
+      });
+    },
+    onMounted(e) {
+      this.monacoEditor = e, e.getModel().onDidChangeContent(() => {
+        this.editCode = e.getValue();
+      });
+      const t = this.$refs.editorContainer;
+      if (!t) return;
+      const i = new ResizeObserver(() => {
+        this.$nextTick(() => {
+          e.layout();
+        });
+      });
+      i.observe(t), this.$on("hook:beforeDestroy", () => {
+        i.disconnect();
+      });
+    },
+    formatCodeMonaco() {
+      var t, i, s, a, u, l;
+      if (!this.useMonaco) {
+        (i = (t = this.$message) == null ? void 0 : t.warning) == null || i.call(t, "Format works only in VS Code mode");
+        return;
+      }
+      if (!this.monacoEditor) {
+        console.warn("Monaco not ready");
+        return;
+      }
+      if (!["javascript", "typescript", "json", "html", "css"].includes(this.selectedLanguage)) {
+        (a = (s = this.$message) == null ? void 0 : s.info) == null || a.call(s, `No formatter for ${this.selectedLanguage}`);
+        return;
+      }
+      (l = (u = this.monacoEditor).focus) == null || l.call(u), this.monacoEditor.getAction("editor.action.formatDocument").run();
+    }
+  }
+}, xe = {
+  methods: {
+    renderEditors(e) {
+      let i = this.currentCode && typeof (O(this.currentCode) || this.currentCode) == "object" ? {
+        comp: "JsonViewer",
+        options: {
+          load: this.loadCode,
+          class: `panel-body prism-content ${this.preClass} grey lighten-3`,
+          style: { fontSize: `${14 * this.zoomLevel}px` },
+          props: { value: O(this.currentCode) || this.currentCode },
+          ref: "codePre"
+        }
+      } : {
+        comp: "pre",
+        options: {
+          load: this.loadCode,
+          class: `panel-body prism-content ${this.preClass}`,
+          style: { fontSize: `${14 * this.zoomLevel}px` },
+          domProps: { innerHTML: this.highlightedWithSearch },
+          ref: "codePre"
+        }
+      }, s = {
+        options: {
+          ref: "editorContainer"
+        },
+        0: this.isMinimized ? null : this.isEditing ? this.useMonaco ? {
+          comp: "VueMonacoEditor",
+          options: {
+            ref: "monacoEditor",
+            class: "editor-stack",
+            props: {
+              value: this.editCode,
+              language: this.selectedLanguage,
+              theme: this.monacoTheme,
+              options: this.monacoOptions
+            },
+            style: {
+              "min-height": "500px"
+            },
+            on: {
+              change: (a, u) => {
+                this.editCode = a;
+              }
+            }
+          }
+        } : {
+          comp: "div",
+          options: {
+            class: "editor-stack",
+            html: [
+              {
+                comp: "textarea",
+                options: {
+                  ref: "textarea",
+                  class: "code-highlight",
+                  style: { width: "100%", "min-hight": "500px" },
+                  attrs: { spellcheck: !1 },
+                  domProps: { value: this.liveHighlighted },
+                  on: {
+                    input: this.onTextareaInput,
+                    scroll: this.syncScroll,
+                    keydown: (a) => {
+                      a.key === "Tab" && (a.preventDefault(), this.insertTab());
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        } : i
+      };
+      return e("WBC", {
+        props: { item: s }
+      });
+    }
+  }
+};
+function j(e, t, i, s, a, u, l, d) {
+  var m = typeof e == "function" ? e.options : e;
+  return u && (m._scopeId = "data-v-" + u), {
+    exports: e,
+    options: m
+  };
+}
+const Se = {
+  name: "WBCodeCommandPalette",
+  props: {
+    open: {
+      type: Boolean,
+      default: !1
+    },
+    wbcConfig: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  render(e) {
+    return this.open ? e("WBC", { props: { item: this.wbcConfig } }) : null;
+  }
+}, _e = null, $e = null;
+var Ee = /* @__PURE__ */ j(
+  Se,
+  _e,
+  $e,
+  !1,
+  null,
+  null
+);
+const le = Ee.exports, Fe = {
+  name: "WBCodeOutput",
+  props: {
+    open: {
+      type: Boolean,
+      default: !1
+    },
+    wbcConfig: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  render(e) {
+    return this.open ? e("WBC", { props: { item: { ...this.wbcConfig } } }) : null;
+  }
+}, Ae = null, Te = null;
+var Pe = /* @__PURE__ */ j(
+  Fe,
+  Ae,
+  Te,
+  !1,
+  null,
+  null
+);
+const de = Pe.exports, Oe = {
+  name: "WBCodeSamples",
+  props: {
+    open: {
+      type: Boolean,
+      default: !1
+    },
+    wbcConfig: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  render(e) {
+    return this.open ? e("WBC", { key: `${JSON.stringify(this.wbcConfig)}`, props: { item: this.wbcConfig } }) : null;
+  }
+}, Le = null, De = null;
+var Ie = /* @__PURE__ */ j(
+  Oe,
+  Le,
+  De,
+  !1,
+  null,
+  null
+);
+const ue = Ie.exports, Re = {
+  name: "WBCodeUserCodes",
+  props: {
+    open: {
+      type: Boolean,
+      default: !1
+    },
+    wbcConfig: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  render(e) {
+    return this.open ? e("WBC", { keyy: `${JSON.stringify(this.wbcConfig).length % 973}`, props: { item: this.wbcConfig } }) : null;
+  }
+}, Me = null, ze = null;
+var He = /* @__PURE__ */ j(
+  Re,
+  Me,
+  ze,
+  !1,
+  null,
+  null
+);
+const ce = He.exports, Ne = {
+  name: "WBCode",
+  mixins: [ve, ke, Ce, xe],
+  components: {
+    WBCodeCommandPalette: le,
+    WBCodeOutput: de,
+    WBCodeSamples: ue,
+    WBCodeUserCodes: ce
+  },
+  props: {
+    loading: {
+      default: () => !1
+    },
+    item: {
+      type: Object,
+      validator(e) {
+        return !(!e || e.display && !Array.isArray(e.display) || e.autoUpdate && !Array.isArray(e.autoUpdate) || e.languages && typeof e.languages != "string" || e.samplesss && typeof e.samplesss != "object");
+      },
+      default: () => ({
+        code: (e) => "# fdgdfgdfg ",
+        codeDive: !0,
+        display: ["code", "preview", "html", "upload", "samples", "markdown", "formatter"],
+        autoUpdate: ["code", "preview", "html", "upload", "samples", "markdown", "formatter"],
+        global: "co",
+        languages: "wbc,markdown,javascript,WBC,markup,html,text,latex,python,rust,wbgis,wbcode,wbhtml",
+        filename: "app.js",
+        samplesss: {
+          wbc: [],
+          python: ["print('hello world')"],
+          html: [
+            "<dvi>hellow world from html</dvi>",
+            "<b>hellow world from html</b>",
+            `<button type="button" class="v-btn v-btn--is-elevated v-btn--has-bg theme--light v-size--default">
+              <span class="v-btn__content">
+              vuetify-button
+            </span>
+          </button>`
+          ],
+          markdown: ["# title markdown"],
+          javascript: [
+            'console.log("Hello from javascript")',
+            'alert("Hello from javascript")',
+            `const x=1; 
+                     function hello(){return "hi"
+                     }`
+          ]
+        },
+        patcher: {
+          samples: {
+            a: "starting samples| blue",
+            z: "ending samples| blue"
+          },
+          code: (e) => {
+            e.default_0 = "<~ol,yellow>", e.default_1 = "<li,yellow>", e.z = "zzzzzzzzzzzzzzzzz", e.zz = "./0.mp4";
+          },
+          code: (e) => (t) => {
+            t.a = "aaaaaaaaaaaaaa", t.b = e.store.state.lg, t.bc = ["<~ol>", "<li>", e.data.displayCode, "aaaa", "bbbb"], t.default_0 = "<~ol,yellow>", t.default_1 = "<li,yellow>", t.z = "zzzzzzzzzzzzzzzzz", t.zz = "./0.mp4";
+          },
+          preview: {
+            0: "<VCol>",
+            z: "end-preview"
+          },
+          main: {
+            0: "<~VRow>",
+            1: "<VCol>",
+            z: "h1__extra-col"
+          },
+          toHtml: {
+            0: "<VCol>",
+            z: "end-toHtml"
+          },
+          toMd: {
+            0: "<VCol>",
+            z: "end-toMd"
+          },
+          toHtmlMd: {
+            0: "<~VRow>",
+            1: "<VCol>",
+            z: "h1__To HTML_MD"
+          },
+          toFormat: {
+            0: "<~VRow>",
+            1: "<VCol>",
+            z: "h1__To Format"
+          }
+        }
+      })
+    },
+    wbCode: {
+      default: () => null
+    },
+    global: { type: String, default: null }
+  },
+  /* ====================== DATA ====================== */
+  data() {
+    var e, t, i, s, a, u, l, d, m, S, b, w, $, E, A, C, f, v, o, r, c, h, p, g, y, n, k, x, _, L, D, R;
+    return {
+      // samples: {
+      //   // ...(this.languageList || []).map((lang) => this.samples?.[lang] || []),
+      // },
+      item_: {},
+      convertedHtml: "",
+      currentUserCode: null,
+      isNew: null,
+      paletteFilterValue: "",
+      hide: !1,
+      float_: null,
+      close_: !1,
+      drag_: null,
+      floatCode: null,
+      closeCode: !1,
+      dragCode: null,
+      wbCode_: this.wbCode,
+      loadCode: this.isEditing,
+      //false,
+      // key: "wbcode-key-",
+      monacoTheme: "vs-dark",
+      showMonacoSettings: !1,
+      monacoSettings: {
+        minimap: !1,
+        wordWrap: "on",
+        fontSize: 14,
+        formatOnType: !0,
+        formatOnPaste: !0
+      },
+      useMonaco: !0,
+      monacoEditor: null,
+      monacoKey: 0,
+      savedScroll: 0,
+      layoutMode: 0,
+      isResizing: !1,
+      isFullscreen: !1,
+      copied: !1,
+      mdCopied: !1,
+      fmtDispCodeCopied: !1,
+      htmlCopied: !1,
+      isExpanded: !1,
+      isMinimized: !1,
+      isEditing: !1,
+      isDarkMode: !1,
+      isDark: !1,
+      // true = dark mode active
+      // canUndo: false,         // ← set by your editor logic
+      // canRedo: false,          // ← set by your editor logic
+      isUndoOrRedo: !1,
+      editCode: this.code || "Edit/Upload/Drag your code here ...",
+      displayCode: this.code || "Edit/Upload/Drag your code here ...",
+      formattedDisplayCode: this.code || "Edit/Upload/Drag your code here ...",
+      showSearch: !1,
+      searchQuery: "",
+      searchIndex: 0,
+      searchResults: [],
+      selectedLanguage: this.getInitialLanguage(),
+      // showPreview: false,
+      patcher_: this.item.patcher,
+      // Toolbar toggles are opt-in via item.display: [...]. Default = off so the
+      // bare <WBC item="./file.txt"/> case renders just the code, no header.
+      showCode: !0,
+      // gates the actual code panel — must stay on by default (line 2078)
+      showPreview: ((t = (e = this.item) == null ? void 0 : e.display) == null ? void 0 : t.includes("preview")) ?? !1,
+      showHtml: ((s = (i = this.item) == null ? void 0 : i.display) == null ? void 0 : s.includes("html")) ?? !1,
+      showMd: (((u = (a = this.item) == null ? void 0 : a.display) == null ? void 0 : u.includes("markdown")) || ((d = (l = this.item) == null ? void 0 : l.display) == null ? void 0 : d.includes("Md"))) ?? !1,
+      showFormat: ((S = (m = this.item) == null ? void 0 : m.display) == null ? void 0 : S.includes("formatter")) ?? !1,
+      showUpload: ((w = (b = this.item) == null ? void 0 : b.display) == null ? void 0 : w.includes("upload")) ?? !1,
+      showSamples: ((E = ($ = this.item) == null ? void 0 : $.display) == null ? void 0 : E.includes("samples")) ?? !1,
+      showCodes: ((C = (A = this.item) == null ? void 0 : A.display) == null ? void 0 : C.includes("codes")) ?? !1,
+      textareaHeight: 100,
+      originalSrc: this.code || "Edit/Upload/Drag your code here ...",
+      pdfMenuOpen: !1,
+      selectedSample: null,
+      zoomLevel: 1,
+      runOutput: "",
+      isRunning: !1,
+      pyodide: null,
+      capturedOutput: [],
+      commandPaletteOpen: !1,
+      commandQuery: "",
+      // filteredCommands: [],
+      selectedCommandIndex: 0,
+      activeResultTab: "preview",
+      // convertedHtml: "",
+      convertedMd: "",
+      dragOver: !1,
+      // showUpload: this.showUpload,
+      // *************************************
+      key: (f = this.item) == null ? void 0 : f.key,
+      output: (v = this.item) == null ? void 0 : v.output,
+      code: (o = this.item) == null ? void 0 : o.code,
+      language: ((r = this.item) == null ? void 0 : r.language) || "javascript",
+      languages: ((c = this.item) == null ? void 0 : c.languages) || "javascript",
+      filename: (h = this.item) == null ? void 0 : h.filename,
+      extra: (p = this.item) == null ? void 0 : p.extra,
+      localFilename: this.filename,
+      // <-- NEW reactive cop,
+      keyBind: ((g = this.item) == null ? void 0 : g.keyBind) || !1,
+      commands: ((y = this.item) == null ? void 0 : y.commands) || [],
+      autoRun: (n = this.item) == null ? void 0 : n.autoRun,
+      preview: (k = this.item) == null ? void 0 : k.preview,
+      full: (x = this.item) == null ? void 0 : x.full,
+      options: (_ = this.item) == null ? void 0 : _.options,
+      display: (L = this.item) == null ? void 0 : L.display,
+      samples: ((D = this.item) == null ? void 0 : D.samples) || {},
+      codes: {},
+      userCodes: ((R = this.item) == null ? void 0 : R.userCodes) || {},
+      notifications: []
+    };
+  },
+  render(e) {
+    if (this.hide)
+      return null;
+    let t = this.wbCode_ == "boolean" || this.wbCode_;
+    if (t) {
+      let { activator: i = "div__Show/Hide Code|align-end font-weight-bold", wbCode: s = {}, wbcObj: a = {}, collapsed: u = typeof t.wbCode == "boolean" ? t.wbCode : !1 } = t.wbCode || {};
+      t.wbCode = null;
+      let l = {
+        options: {
+          class: "pa-2 ma-2",
+          style: {
+            border: "5px solid grey"
+            // width: "100%",
+            // height: "100%",
+          }
+        },
+        default_0: {
+          options: {
+            class: "pa-2 ma-2 ",
+            // style: {
+            //     // border: "5px solid red",
+            //     width: "100%",
+            //     height: "100%",
+            // },
+            wrap: { comp: "VCard", options: { class: "border pa-5 ma-5 ", props: { outlined: !0, shaped: !0, rounded: !0 } } },
+            html: this.childrenNodes
+          }
+        },
+        default_1: {
+          comp: "~VListGroup",
+          options: {
+            class: "grey lighten-4",
+            props: { value: u || !0 },
+            // html: this.renderWbcode(h, this.item_),
+            slots: {
+              // activator: 'h2__code|red',
+              activator: { options: { comp: "VRow", class: "justify-end" }, a: i }
+            }
+          },
+          tracker: (d) => {
+            d.data.options.props.value = u;
+          }
+          // ...wbcObj,
+        },
+        default_11: 'div__&lt;WBCode :item="item"&gt;|grey display-1 text-center__',
+        default_2: this.renderDefaultWbcode(e, t, s),
+        ...a
+      };
+      return this._withNotifications(e, e("WBC", { props: { item: { ...l } } }));
+    }
+    return this._withNotifications(e, e("WBC", { key: this.key, props: { item: this.childrenNodes } }));
+  },
+  /* ====================== COMPUTED ====================== */
+  computed: {
+    __DEV__() {
+      return typeof __WBC_DEV__ < "u" ? __WBC_DEV__ : process.env.NODE_ENV !== "production";
+    },
+    isWbCodePro() {
+      return this.__DEV__ ? !0 : this.$store && this.$store.getters.isPackageAuthorized("code");
+    },
+    userTier() {
+      return this.__DEV__ ? "development" : this.isWbCodePro ? "premium" : "free";
+    },
+    childrenNodes() {
+      var i;
+      let e, t = (s) => ({
+        comp: this.output || ["code"],
+        options: {
+          class: "grey lighten-4",
+          style: { height: "100%" }
+        },
+        // 1:allComps.code,
+        // 1: allComps.mainEditor,
+        // 2: allComps.output,
+        // allComps.editor,
+        // // allComps.languages,
+        // allComps.uploadFile,
+        // ["<~VRow>", "<VCol>", allComps.code, allComps.output],
+        // allComps.samples,
+        // 1:["<~VRow>", "<VCol>", allComps.htmlOutput, allComps.mdOutput],
+        // 2:["<~VRow>", "<VCol>", allComps.toFormat],
+        //           htmlOutput
+        // mdOutput
+        // toFormat
+        // allComps.edit,
+        ...this.allComps
+      });
+      return typeof this.output == "object" ? e = { comp: this.output || ["code"], ...this.allComps } : typeof this.output == "function" ? e = ((i = this.output) == null ? void 0 : i.call(this, this.allComps)) || "aaaaaaaaaaaaaaaaaaaaaaa" : e = {
+        //0:
+        //this.isMinimized && this.showUpload
+        //? (h_) => this.renderUploadFile(h_)
+        //: null,
+        1: t(this.allComps)
+      }, this.key = JSON.stringify(e), e;
+    },
+    renderFilteredCommandsPalette() {
+      let e = Object.entries(this.allComps).filter(
+        ([t, i]) => this.commands.includes(t)
+      );
+      return this.isEmpty(this.paletteFilterValue) || (e = e.filter(
+        ([t, i]) => `${t}`.includes(this.paletteFilterValue)
+      )), e = e.map(([t, i]) => {
+        var s, a;
+        return ["<li>", [i, `-----${((a = (s = i == null ? void 0 : i.options) == null ? void 0 : s.attrs) == null ? void 0 : a.title) || t}-----`]];
+      }), e;
+    },
+    commandPaletteConfig() {
+      return {
+        comp: "div",
+        options: {
+          footers: this.renderFilteredCommandsPalette,
+          ref: "commandPalette",
+          style: {
+            position: "fixed",
+            top: "13%",
+            left: "30%",
+            "z-index": "10",
+            height: "auto",
+            width: "40%",
+            padding: "1.8%",
+            transform: "translate(0px, 0px)",
+            cursor: "grab",
+            "background-color": "rgb(250, 250, 250)",
+            border: "5px solid rgb(122, 75, 230)",
+            resize: "both",
+            overflow: "auto"
+          },
+          html: {
+            comp: "VTextField",
+            footer: "VDivider",
+            options: {
+              ref: "cmdInput",
+              val: "co",
+              props: { value: "", placeholder: "Type a command..." },
+              on: {
+                input: (e) => {
+                  this.notify(e), this.paletteFilterValue = e;
+                },
+                click: (e) => {
+                  e.stopPropagation();
+                }
+              },
+              footer: []
+            }
+          }
+        },
+        tracker: (e) => {
+        }
+      };
+    },
+    samplesConfig() {
+      var e;
+      return {
+        dive: !0,
+        0: {
+          comp: "~VNavigationDrawer",
+          options: {
+            hide: !0,
+            keyy: "key-drawer",
+            class: "sidebarr pa-1 ma-1 ",
+            props: {
+              permanent: !1,
+              app: !1,
+              hight: "100vh",
+              right: (t) => {
+                var i, s;
+                return ((s = (i = t == null ? void 0 : t.store) == null ? void 0 : i.state) == null ? void 0 : s.lg) == "ar";
+              },
+              "expand-on-hover": !0
+            }
+          }
+        },
+        default_1: {
+          comp: "VSelect",
+          options: {
+            props: {
+              items: Object.entries((e = this.samples) == null ? void 0 : e[this.selectedLanguage]),
+              value: (t) => t,
+              label: "Samples",
+              dense: !0,
+              outlined: !0,
+              hideDetails: !0
+            },
+            on: {
+              change: (t) => {
+                this.localFilename = `${t[0]}`, this.applySample(t[1]);
+              }
+            },
+            scopedSlots: {
+              selection: ({ item: t }) => t[0],
+              item: ({ item: t }) => {
+                let i = {
+                  0: "<~VRow>",
+                  "01": "<VCol>",
+                  "02": {
+                    comp: "span",
+                    options: {
+                      class: "mr-5",
+                      attrs: { title: JSON.stringify(t[1]) },
+                      html: t[0]
+                    }
+                  }
+                };
+                return this.$createElement("WBC", { props: { item: i } });
+              }
+            }
+          },
+          tracker: (t) => {
+            var s;
+            let i = Object.entries((s = this.samples) == null ? void 0 : s[this.selectedLanguage]);
+            t.data.options.props.items = i;
+          }
+        }
+      };
+    },
+    userCodesConfig() {
+      var t;
+      let e = {
+        dive: !0,
+        0: {
+          comp: "~VNavigationDrawer",
+          options: {
+            hide: !0,
+            keyy: "key-drawer",
+            class: "sidebarr pa-1 ma-1 ",
+            props: {
+              permanent: !1,
+              app: !0,
+              hight: "100vh",
+              right: (i) => {
+                var s, a;
+                return ((a = (s = i == null ? void 0 : i.store) == null ? void 0 : s.state) == null ? void 0 : a.lg) == "ar";
+              },
+              "expand-on-hover": !0
+            }
+          }
+        },
+        default_1: {
+          comp: "*VSelect",
+          options: {
+            keyy: this.userCodes.length,
+            class: "yellow pa-1 ma-1",
+            props: {
+              items: ((t = this.userCodes) == null ? void 0 : t[this.selectedLanguage]) || [],
+              value: this.selectedSample,
+              label: "Codes",
+              dense: !0,
+              outlined: !0,
+              hideDetails: !0
+            }
+          }
+        }
+      };
+      return this.languageList.forEach((i, s) => {
+        var u;
+        let a = Object.entries(
+          ((u = this.userCodes) == null ? void 0 : u[i.value.toLowerCase()]) || []
+        );
+        e[`defaultt_${s}`] = {
+          comp: "VSelect",
+          options: {
+            props: {
+              items: a,
+              "item-text": (l) => l[0],
+              "item-value": (l) => l,
+              label: `----${i == null ? void 0 : i.label} (${a.length})----`,
+              dense: !0,
+              outlined: !0,
+              hideDetails: !0
+            },
+            on: {
+              change: (l) => {
+                this.currentUserCode = l[0], this.localFilename = l[0], this.applySample(l[1]), this.selectedLanguage = i.value.toLowerCase();
+              }
+            },
+            scopedSlots: {
+              item: ({ item: l }) => {
+                let d = {
+                  "02": {
+                    comp: "span",
+                    options: {
+                      attrs: { title: JSON.stringify(l[1]) },
+                      html: {
+                        comp: "VTextField",
+                        dive: !0,
+                        options: {
+                          props: {
+                            disabled: !0,
+                            value: l[0],
+                            dense: !0
+                          },
+                          on: {
+                            click: (m) => (S) => {
+                              S.stopPropagation();
+                            }
+                          },
+                          slots: {
+                            append: {
+                              0: {
+                                comp: "span",
+                                options: {
+                                  html: "edit|blue",
+                                  on: {
+                                    click: (m) => (S) => {
+                                      var b, w;
+                                      S.stopPropagation(), this.notify("#click:append"), m.data.options.props.disabled = !m.data.options.props.disabled, m.data.options.slots.append.options.html = m.data.options.props.disabled ? "edit|blue" : "save|green", this.userCodes[i.value.toLowerCase()][m.val.get()] = (b = this.userCodes) == null ? void 0 : b[i.value.toLowerCase()][l[0]], (w = this.userCodes) == null || delete w[i.value.toLowerCase()][l[0]];
+                                    }
+                                  }
+                                }
+                              },
+                              1: this.currentUserCode == l[0] ? this.allComps.save : this.allComps.edit,
+                              2: this.allComps.download,
+                              3: {
+                                comp: "VIcon",
+                                options: {
+                                  html: "mdi-delete",
+                                  on: {
+                                    click: () => {
+                                      this.notify("mdi-delete"), delete this.userCodes[this.selectedLanguage][this.currentUserCode], this.currentUserCode = null;
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                };
+                return this.$createElement("WBC", { props: { item: d } });
+              }
+            }
+          }
+        };
+      }), e;
+    },
+    outputConfig() {
+      return {
+        options: {
+          // load: !true,
+          float: null,
+          hide: !1,
+          drag: !1,
+          class: "grey lighten-4 ",
+          style: { height: "100%" }
+        },
+        default_0: "<div,panel-header>",
+        default_2: (e) => this.renderRawPreview(e),
+        default_3: (e) => this.renderRawResult(e),
+        tracker: (e) => {
+          e.data.options.float = this.float_ || null, e.data.options.drag = this.drag_, e.data.options.hide = this.close_;
+        }
+      };
+    },
+    lang() {
+      var e, t, i, s;
+      return ((e = this == null ? void 0 : this.item_) == null ? void 0 : e.lang) || ((i = (t = this == null ? void 0 : this.$store) == null ? void 0 : t.state) == null ? void 0 : i.lg) || ((s = this.getCookies()) == null ? void 0 : s.lg) || "en";
+    },
+    //     convertedHtml() {
+    // // let a
+    // //             if(this.isExecutableLanguage)
+    // //             {
+    // //               (async ()=>{return await this.formatCode(this.textToParagraphs(this.runOutput))})();
+    // //               }
+    // // else{
+    //     },
+    itemAccessebility() {
+      var e, t, i, s, a, u;
+      return {
+        props$: this.$props,
+        data$: this._data,
+        hide$: (l) => {
+          this.hide = l || !this.hide;
+        },
+        set$: (l, d = "item_") => {
+          this.$data[d] = l;
+        },
+        get$: (l = "item_") => this.$data[l],
+        // ref$: () => this?.$refs[this.refName],
+        // el$: () => this?.$refs?.rawHtml?.$el,
+        // refs$: this?.$refs,
+        vm$: this,
+        emit$: this.$emit,
+        update$: () => {
+          this.key_ += 1;
+        },
+        key$: this.key_,
+        lg$: {
+          lang: this.lang,
+          get: () => {
+            var l, d;
+            return ((d = (l = this == null ? void 0 : this.$store) == null ? void 0 : l.state) == null ? void 0 : d.lg) || "en";
+          },
+          set: (l) => {
+            this.$store.commit("updateLang", l);
+          }
+        },
+        user$: (t = (e = this == null ? void 0 : this.$store) == null ? void 0 : e.state) == null ? void 0 : t.user,
+        loggedIn$: ((s = (i = this == null ? void 0 : this.$store) == null ? void 0 : i.state) == null ? void 0 : s.loggedIn) || !1,
+        queryData$: this.queryData,
+        aes$: {
+          enc: this.aesEnc,
+          dec: this.aesDec
+        },
+        validators$: {
+          ...this.validators || {}
+        },
+        cookies$: {
+          ...this.$cookies,
+          state: this.getCookies || {}
+        },
+        storage$: localStorage,
+        proto$: ((a = this == null ? void 0 : this.$options) == null ? void 0 : a.methods) || {},
+        routeParams$: (u = this == null ? void 0 : this.$route) == null ? void 0 : u.params,
+        // moment: this.$moment,
+        dayjs$: this.$dayjs,
+        // MarkdownIt: this.$md,
+        // TurnDown: this.$turnDown,
+        markdown$: {
+          md2Html: (l) => this.$md.render(l),
+          html2Md: (l) => this.$turnDown.turndown(l)
+        },
+        watch$: this.$watch,
+        store$: this.$store,
+        router$: this.$router,
+        alert$: (...l) => (l.length == 1 ? l[0] == 0 ? (this.select = !1, this.alertObjs = []) : this.alertObjs.push(l) : l.length == 0 ? this.alertObjs.push(this.item_) : this.alertObjs.push(...Array.isArray(l) ? l : [l]), this.alertObjs)
+      };
+    },
+    /* === SMART DEFAULTS === */
+    languageList() {
+      return typeof this.languages != "string" ? this.languagesObj : this.languages.split(",").map((e) => e.trim().toLowerCase()).filter((e) => e).map((e) => {
+        var s;
+        const t = e, i = ((s = this.languagesObj.find((a) => a.value === t)) == null ? void 0 : s.label) || (typeof e == "string" && e ? e.charAt(0).toUpperCase() + e.slice(1) : "");
+        return { value: t, label: i };
+      });
+    },
+    allComps() {
+      let e = {
+        options: {
+          comp: "VIcon",
+          hide: !1,
+          html: "",
+          attrs: {},
+          on: {
+            click: () => {
+              if (this.isEmpty(this.editCode)) {
+                this.notify("Code not saved (Empty content)", "warn");
+                return;
+              }
+              let t = this.localFilename || this.currentUserCode;
+              (!t || this.isNew) && (t = this.selectedLanguage + (Object.values(this.userCodes[this.selectedLanguage]).length + 1)), this.userCodes[this.selectedLanguage][t] = this.editCode, this.isEditing = !1, this.isNew = !1, this.updateConvertedHtml();
+            }
+          }
+        },
+        tracker: (t) => {
+          t.data.options.html = "mdi-content-save-outline", t.data.options.attrs = {
+            title: "Sync to users codes "
+          };
+        }
+      };
+      return {
+        // filename:this.filename,
+        code: (t) => {
+          var i;
+          return this.renderCode(t, (i = this.patcher_) == null ? void 0 : i.code);
+        },
+        result: (t) => {
+          var i;
+          return this.renderOutput(t, (i = this.patcher_) == null ? void 0 : i.output);
+        },
+        rawPreview: (t) => {
+          var i;
+          return this.renderRawPreview(t, (i = this.patcher_) == null ? void 0 : i.rawPreview);
+        },
+        rawResult: (t) => {
+          var i;
+          return this.renderRawResult(t, (i = this.patcher_) == null ? void 0 : i.rawResult);
+        },
+        htmlOutput: this.renderRecursiveHtmlOutput,
+        mdOutput: this.renderRecursiveMarkdownOutput,
+        toFormat: this.renderRecursiveDisplayedCodeToFormat,
+        // uploadFile: (h_) => this.renderUploadFile(h_),
+        upload: (t) => {
+          var i;
+          return this.renderUploadFile(t, (i = this.patcher_) == null ? void 0 : i.upload);
+        },
+        samples: (t) => {
+          var i;
+          return this.renderSamples(t, (i = this.patcher_) == null ? void 0 : i.samples);
+        },
+        userCodes: (t) => {
+          var i;
+          return this.renderUserCodes(t, (i = this.patcher_) == null ? void 0 : i.codes);
+        },
+        mainEditor: (t) => this.renderEditors(t),
+        dragZone: this.dragZone,
+        apply: { comp: "VBtn", options: { html: "apply", on: { click: () => {
+          this.updateConvertedHtml();
+        } } } },
+        commandPalette: (t) => this.renderCommandPalette(t),
+        // this.commandPaletteOpen ? this.renderCommandPalette(h_) : null,
+        languages: {
+          comp: "VSelect",
+          options: {
+            props: {
+              dense: !0,
+              label: "select-language",
+              outlined: !0,
+              items: this.languageList,
+              "item-text": (t) => t.label,
+              // value: (this.selectedLanguageList||[]).find(ele=>ele.label==this.selectedLanguage||el.label=='markdown')
+              value: this.selectedLanguage
+            },
+            on: {
+              change: (t) => {
+                this.selectedLanguage = t, this.onLanguageChange();
+              },
+              click: (t) => {
+                t.stopPropagation();
+              }
+            },
+            style: { width: "min-content" }
+          }
+          // tracker: (that) => {
+          //   that.data.options.props.value = this.selectedLanguage;
+          // },
+        },
+        extension: () => re(this.selectedLanguage),
+        float: {
+          comp: "VIcon",
+          options: {
+            attrs: { title: "Float Output" },
+            class: " pa-2",
+            // class: 'pa-2 mt-15',
+            // class: 'mt-10 pt-5',
+            html: this != null && this.float ? "mdi-fullscreen-exit" : "mdi-dock-window",
+            // headers: 'Float Output: ',
+            // attrs: { title: 'Float Output' },
+            on: {
+              click: () => {
+                this.notify("!el?.options?.float"), this.float_ = !this.float_;
+              }
+            }
+          }
+          // ...el?.options?.floatContent,
+        },
+        close: {
+          comp: "VIcon",
+          options: {
+            attrs: { title: "Close window" },
+            class: " pa-2",
+            html: "mdi-close-box-outline",
+            on: {
+              click: () => {
+                this.notify("closed"), this.toggleClose();
+              }
+            }
+          }
+        },
+        floatCode: {
+          comp: "VIcon",
+          options: {
+            attrs: { title: "Float Code Output" },
+            class: " pa-2",
+            // class: 'pa-2 mt-15',
+            // class: 'mt-10 pt-5',
+            html: this != null && this.floatCode ? "mdi-fullscreen-exit" : "mdi-dock-window",
+            // headers: 'FloatCode Output: ',
+            // attrs: { title: 'FloatCode Output' drag},
+            on: {
+              click: () => {
+                this.notify("!el?.options?.floatCode"), this.floatCode = !this.floatCode;
+              }
+            }
+          }
+          // ...el?.options?.floatContent,
+        },
+        closeCode: {
+          comp: "VIcon",
+          options: {
+            attrs: { title: "Close Code window" },
+            class: " pa-2",
+            html: "mdi-close-box-outline",
+            on: {
+              click: () => {
+                this.toggleCloseCode();
+              }
+            }
+          }
+        },
+        drag: {
+          comp: "VIcon",
+          options: {
+            attrs: { title: "Drag window" },
+            class: " pa-2",
+            // html: 'mdi-cursor-move',
+            html: "mdi-drag",
+            on: {
+              click: () => {
+                this.drag_ = !this.drag_;
+              }
+            }
+          }
+        },
+        dragCode: {
+          comp: "VIcon",
+          options: {
+            attrs: { title: "Drag  Code window" },
+            class: " pa-2",
+            // html: 'mdi-cursor-move',
+            html: "mdi-drag",
+            on: {
+              click: () => {
+                this.dragCode = !this.dragCode;
+              }
+            }
+          }
+        },
+        format: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-format-color-text",
+            // ← better than code-braces for “beautify”
+            on: { click: () => this.beautifyCode() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Format / Beautify code" };
+          }
+        },
+        filename: ` ${this.filename}`,
+        extra: ` ${this.extra}`,
+        language: ` ${this.language}`,
+        languageContent: ` ${this.language} Content`,
+        localFilename: this.localFilename,
+        saveAs: {
+          comp: "VTextField",
+          options: {
+            // wrap:'VCol',
+            html: "",
+            class: "filename-text",
+            props: {
+              value: this.localFilename,
+              label: "fileName",
+              "full-width": !1
+            },
+            style: {},
+            on: {
+              change: (t) => {
+                this.localFilename = t;
+              },
+              click: (t) => {
+                t.stopPropagation();
+              }
+            },
+            slots: {
+              append: e
+            }
+          },
+          tracker: (t) => {
+            let i = this.localFilename;
+            (!i || this.isNew) && (i = this.selectedLanguage + (Object.values(this.userCodes[this.selectedLanguage]).length + 1)), t.data.options.props.value = i, t.data.options.html = this.localFilename;
+          }
+        },
+        copy: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.copyCode() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.copied ? "mdi-check-bold" : "mdi-content-copy", t.data.options.attrs = {
+              title: this.copied ? "Code copied!" : "Copy code"
+            };
+          }
+        },
+        copyHtml: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.copyConvertedToHtml() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.htmlCopied ? "mdi-check-bold" : "mdi-language-html5", t.data.options.attrs = {
+              title: this.htmlCopied ? "HTML copied!" : "Copy as HTML"
+            };
+          }
+        },
+        copyMd: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.copyConvertedToMd() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.mdCopied ? "mdi-check-bold" : "mdi-language-markdown-outline", t.data.options.attrs = {
+              title: this.mdCopied ? "Markdown copied!" : "Copy as Markdown"
+            };
+          }
+        },
+        copyFormat: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.copyFormatedDisplayCode() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.fmtDispCodeCopied ? "mdi-check-bold" : "mdi-format-align-left", t.data.options.attrs = {
+              title: this.fmtDispCodeCopied ? "Formatted code copied!" : "Copy formatted code"
+            };
+          }
+        },
+        share: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-share-variant",
+            on: { click: () => this.shareCode() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Share code" };
+          }
+        },
+        showCode: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.toggleShowCode() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.showCode ? "mdi-code-tags" : "mdi-eye-off", t.data.options.attrs = {
+              title: this.showCode ? "Hide code" : "Show code"
+            };
+          }
+        },
+        showPreview: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.togglePreview() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.showPreview ? "mdi-eye" : "mdi-eye-off", t.data.options.attrs = {
+              title: this.showPreview ? "Hide preview" : "Show preview"
+            };
+          }
+        },
+        showHtml: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-language-html5",
+            on: { click: () => this.toggleHtml() }
+          },
+          tracker: (t) => {
+            t.data.options.html = (this.showHtml, "mdi-language-html5"), t.data.options.attrs = {
+              title: this.showHtml ? "Hide HTML source" : "Show generated HTML"
+            }, this.showHtml ? t.data.options.color = "orange" : delete t.data.options.color;
+          }
+        },
+        showMd: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-language-markdown-outline",
+            on: { click: () => this.toggleMd() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.showMd ? "mdi-language-markdown" : "mdi-language-markdown-outline", t.data.options.attrs = {
+              title: this.showMd ? "Hide Markdown source" : "Show generated Markdown"
+            };
+          }
+        },
+        showFormat: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-format-text-wrapping-clip",
+            on: { click: () => this.toggleFormat() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.showFormat ? "mdi-format-text-wrapping-clip" : "mdi-format-text-wrapping-overflow", t.data.options.attrs = {
+              title: this.showFormat ? "Hide formatted view" : "Show beautifully formatted code"
+            };
+          }
+        },
+        dark: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.toggleDarkMode() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.isDark ? "mdi-weather-sunny" : "mdi-moon-waning-crescent", t.data.options.attrs = {
+              title: this.isDark ? "Switch to Light mode" : "Switch to Dark mode"
+            };
+          }
+        },
+        vscode: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-microsoft-visual-studio-code",
+            on: { click: () => this.toggleEditorMode() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = {
+              title: this.useMonaco ? "Switch to Simple editor" : "Switch to Monaco (VS Code) editor"
+            }, t.data.options.hide = !this.isEditing;
+          }
+        },
+        rotate: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-screen-rotation",
+            on: { click: () => this.rotateLayout() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: this.layoutTitle };
+          }
+        },
+        zoom: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-magnify-plus-outline",
+            on: { click: () => this.toggleZoom() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = {
+              title: `Zoom ${Math.round(this.zoomLevel * 100)}%`
+            };
+          }
+        },
+        reset: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-refresh",
+            on: { click: () => this.resetToOriginal() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Reset to original code" };
+          }
+        },
+        clear: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-delete-outline",
+            on: { click: () => this.editCode = "" }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Clear editor" };
+          }
+        },
+        clearOutput: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-broom",
+            on: { click: () => this.runOutput = "" }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Clear console output" }, t.data.options.hide = !(this.runOutput && this.isExecutableLanguage);
+          }
+        },
+        fullscreen: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.toggleFullscreen() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.isFullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen", t.data.options.attrs = {
+              title: this.isFullscreen ? "Exit fullscreen" : "Enter fullscreen"
+            };
+          }
+        },
+        pdfCode: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-file-pdf-box",
+            on: { click: () => this.exportCodeOnlyPDF() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Export code as PDF" }, t.data.options.hide = !this.isWbCodePro;
+          }
+        },
+        pdfComp: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-file-pdf-box-outline",
+            on: { click: () => this.exportComponentPDF() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Export component as PDF" }, t.data.options.hide = !this.isWbCodePro;
+          }
+        },
+        settings: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-cog-outline",
+            on: { click: () => this.toggleMonacoSettings() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Editor settings" };
+          }
+        },
+        expand: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.isExpanded ? this.closeCollapse() : this.toggleExpand() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.isExpanded ? "mdi-arrow-collapse-all" : "mdi-arrow-expand-all", t.data.options.attrs = {
+              title: this.isExpanded ? "Collapse" : "Expand"
+            };
+          }
+        },
+        download: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-download",
+            on: { click: async () => await this.downloadCode() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = {
+              title: `Download ${this.localFilename || "code"}`
+            };
+          }
+        },
+        darkmode: {
+          // duplicate of dark – kept for compatibility
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.toggleDarkMode() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.isDark ? "mdi-white-balance-sunny" : "mdi-weather-night", t.data.options.attrs = {
+              title: this.isDark ? "Light mode" : "Dark mode"
+            };
+          }
+        },
+        minimize: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.toggleMinimize() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.isMinimized ? "mdi-window-restore" : "mdi-window-minimize", t.data.options.attrs = {
+              title: this.isMinimized ? "Restore" : "Minimize"
+            };
+          }
+        },
+        undo: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-undo",
+            on: { click: () => this.undo() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Undo (Ctrl+Z)" }, t.data.options.hide = !(this.isEditing && this.canUndo), t.data.options.disabled = !this.canUndo;
+          }
+        },
+        redo: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-redo",
+            on: { click: () => this.redo() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Redo (Ctrl+Y)" }, t.data.options.hide = !(this.isEditing && this.canRedo), t.data.options.disabled = !this.canRedo;
+          }
+        },
+        run: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-play-circle-outline",
+            on: { click: () => this.runCode() }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Run code (Ctrl+Enter)" }, t.data.options.hide = !this.isExecutableLanguage;
+          }
+        },
+        edit: {
+          comp: "VIcon",
+          dive: !0,
+          options: {
+            html: "",
+            on: { click: () => this.toggleEdit() }
+            // attrs: {
+            //   title: this.isEditing
+            //     ? "Save (Ctrl+S)"
+            //     : { en: "Edit (Ctrl+E)", fr: "ffffffffff", ar: "aaaaaaaaaaaaa" },
+            // },
+          },
+          tracker: (t) => {
+            t.data.options.html = this.isEditing ? "mdi-check" : "mdi-pencil-outline", t.data.options.attrs = {
+              title: this.isEditing ? "Save (Ctrl+S)" : "Edit (Ctrl+E)"
+            };
+          }
+        },
+        save: {
+          comp: "span",
+          options: {
+            hide: !1,
+            html: e
+          },
+          tracker: (t) => {
+            t.data.options.hide = !(this.isEditing || this.isNew);
+          }
+        },
+        new: {
+          comp: "VIcon",
+          options: {
+            hide: !1,
+            on: {
+              click: () => {
+                this.addNewCode();
+              }
+            }
+          },
+          tracker: (t) => {
+            t.data.options.html = "mdi-new-box", t.data.options.attrs = {
+              title: "New Code (Ctrl+O)"
+            };
+          }
+        },
+        search: [
+          (t) => this.renderSearchInline(t),
+          {
+            comp: "VIcon",
+            options: {
+              hide: this.isEditing,
+              html: "mdi-magnify",
+              on: { click: () => this.toggleSearch() }
+            },
+            tracker: (t) => {
+              t.data.options.hide = this.isEditing || this.isNew, t.data.options.attrs = { title: "Search / Replace (Ctrl+F)" };
+            }
+          }
+        ],
+        palette: {
+          comp: "VIcon",
+          options: {
+            html: "mdi-tune-vertical",
+            // or "mdi-palette" if you prefer
+            on: { click: () => {
+              this.commandPaletteOpen = !this.commandPaletteOpen;
+            } }
+          },
+          tracker: (t) => {
+            t.data.options.attrs = { title: "Command palette (Ctrl+Shift+P)" };
+          }
+        },
+        vsTheme: {
+          comp: "VIcon",
+          options: {
+            html: "",
+            on: { click: () => this.toggleMonacoTheme() }
+          },
+          tracker: (t) => {
+            t.data.options.html = this.monacoTheme === "vs-dark" ? "mdi-weather-sunny" : "mdi-moon-waning-crescent", t.data.options.attrs = { title: "Toggle editor theme" }, t.data.options.hide = !(this.isEditing && this.useMonaco);
+          }
+        }
+      };
+    },
+    //                   <!-- === MONACO CONTROLS: ONLY IN EDIT MODE + MONACO === -->
+    // <div v-if="isEditing && useMonaco" class="monaco-controls">
+    //   <!-- Dark / Light -->
+    //   <button @click="toggleMonacoTheme" class="icon-btn"
+    //           :title="monacoTheme === 'vs-dark' ? 'Light Mode' : 'Dark Mode'">
+    //     <svg class="icon" viewBox="0 0 24 24">
+    //       <path :d="monacoTheme === 'vs-dark' ? sunIcon : moonIcon"/>
+    //     </svg>
+    //   </button>
+    //   <!-- Settings -->
+    //   <button @click="toggleMonacoSettings" class="icon-btn" title="Editor Settings">
+    //     <svg class="icon" viewBox="0 0 24 24">
+    //       <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a0.49 0.49 0 0 0 .12-.61l-1.92-3.32a0.49 0.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-0.36-2.54a0.49 0.49 0 0 0-.48-.41h-3.84a0.49 0.49 0 0 0-.49.41l-0.36 2.54c-0.59.24-1.13.57-1.62.94l-2.39-0.96a0.49 0.49 0 0 0-.59.22l-1.92 3.32a0.49 0.49 0 0 0 .12.61l2.03 1.58c-0.05.3-0.07.62-0.07.94 0 .33.02.64.07.94l-2.03 1.58a0.49 0.49 0 0 0-.12.61l1.92 3.32a0.49 0.49 0 0 0 .59.22l2.39-0.96c0.5.38 1.03.7 1.62.94l0.36 2.54a0.49 0.49 0 0 0 .48.41h3.84a0.49 0.49 0 0 0 .49-.41l0.36-2.54c0.59-.24 1.13-.57 1.62-.94l2.39.96a0.49 0.49 0 0 0 .59-.22l1.92-3.32a0.49 0.49 0 0 0-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+    //     </svg>
+    //   </button>
+    // </div>
+    languagesObj() {
+      return [
+        { value: "markup", label: "HTML" },
+        { value: "css", label: "CSS" },
+        { value: "javascript", label: "JavaScript" },
+        { value: "markdown", label: "Markdown" },
+        { value: "tex", label: "TeX line" },
+        { value: "latex", label: "LaTeX" },
+        { value: "json", label: "JSON" },
+        { value: "wbdataviewer", label: "WBDataViewer" },
+        { value: "wbc", label: "WBC" },
+        { value: "wbgis", label: "WBGis" },
+        { value: "wbcode", label: "WBCode" },
+        { value: "wbhtml", label: "WBHtml" },
+        { value: "wbchart", label: "WBChart" },
+        { value: "wbmermaid", label: "WBMermaid" },
+        { value: "python", label: "Python" },
+        { value: "bash", label: "Bash" },
+        { value: "go", label: "Go" },
+        { value: "cpp", label: "C++" },
+        { value: "rust", label: "Rust" },
+        { value: "sql", label: "SQL" }
+      ];
+    },
+    languageItems() {
+      return typeof this.languages != "string" ? this.languagesObj : this.languages.split(",").map((e) => e.trim()).filter((e) => e).map((e) => ({
+        text: this.getLanguageLabel(e),
+        // nice display name
+        value: typeof e == "string" ? e.toLowerCase().replace(/[^a-z0-9]/g, "") : ""
+        // normalize value
+      }));
+    },
+    // Optional helper – reuse your old mapping logic
+    getLanguageLabel(e) {
+      return typeof e != "string" ? "" : {
+        javascript: "JavaScript",
+        python: "Python",
+        ruby: "Ruby",
+        markup: "HTML",
+        css: "CSS",
+        json: "JSON",
+        markdown: "Markdown",
+        tex: "TeX",
+        latex: "LaTeX",
+        wbc: "WBC",
+        wbgis: "WBGis",
+        wbcode: "WBCode",
+        wbhtml: "WBHtml",
+        wbchart: "WBChart",
+        wbmermaid: "WBMermaid",
+        wbdataviewer: "WBDataViewer",
+        bash: "Bash",
+        sql: "SQL",
+        rust: "Rust",
+        go: "Go",
+        cpp: "C++"
+      }[e.toLowerCase()] || e.charAt(0).toUpperCase() + e.slice(1);
+    },
+    monacoOptions() {
+      return {
+        automaticLayout: !0,
+        minimap: { enabled: this.monacoSettings.minimap },
+        wordWrap: this.monacoSettings.wordWrap,
+        fontSize: this.monacoSettings.fontSize,
+        formatOnType: this.monacoSettings.formatOnType,
+        formatOnPaste: this.monacoSettings.formatOnPaste,
+        fixedOverflowWidgets: !0,
+        suggestOnTriggerCharacters: !0,
+        acceptSuggestionOnEnter: "on",
+        tabCompletion: "on"
+      };
+    },
+    supportsPreview() {
+      return [
+        "markup",
+        "tex",
+        "latex",
+        "markdown",
+        "md",
+        "html",
+        "json",
+        "wbdataviewer",
+        "wbc",
+        "wbgis",
+        "wbcode",
+        "wbhtml",
+        "wbchart",
+        "wbmermaid"
+      ].includes(this.selectedLanguage);
+    },
+    layoutTitle() {
+      return [
+        "Code left of preview",
+        "Code above preview",
+        "Code right of preview"
+      ][this.layoutMode];
+    },
+    layoutClass() {
+      return `layout-${this.layoutMode}`;
+    },
+    resultTitle() {
+      return this.showPreview && this.supportsPreview ? "Preview" : this.runOutput && this.isExecutableLanguage ? "Run Output" : "";
+    },
+    resultIcon() {
+      return this.showPreview && this.supportsPreview ? "preview" : this.runOutput && this.isExecutableLanguage ? "play" : "";
+    },
+    preClass() {
+      let e = this.selectedLanguage;
+      return ["wbc", "json"].includes(this.selectedLanguage) && (e = "json"), `language-${e}`;
+    },
+    currentCode() {
+      return this.isEditing ? this.editCode : this.displayCode;
+    },
+    highlighted() {
+      const e = z.languages[this.selectedLanguage] || z.languages.markup;
+      return z.highlight(this.displayCode, e, this.selectedLanguage);
+    },
+    highlightedWithSearch() {
+      if (!this.searchQuery) return this.highlighted;
+      const e = oe(this.searchQuery), t = new RegExp(`(${e})`, "gi");
+      return this.highlighted.replace(t, '<mark class="search-highlight">$1</mark>');
+    },
+    liveHighlighted() {
+      const e = z.languages[this.selectedLanguage] || z.languages.markup;
+      return z.highlight(this.editCode, e, this.selectedLanguage);
+    },
+    lineCount() {
+      return this.displayCode.split(`
+`).length;
+    },
+    editLineCount() {
+      return this.editCode.split(`
+`).length;
+    },
+    wbcPreviewItem() {
+      var t;
+      let e = O(this.currentCode) || this.currentCode;
+      return this.isPlainObject(e) && ((t = e == null ? void 0 : e.options) == null || delete t.code), this.selectedLanguage === "markdown" || this.selectedLanguage === "md" ? { comp: "MD", options: { src: this.currentCode } } : this.selectedLanguage === "wbchart" ? {
+        comp: "chart",
+        options: { src: O(this.currentCode) || this.currentCode }
+      } : this.selectedLanguage === "wbhtml" ? { comp: "WBHtml", options: { props: { html: this.currentCode } } } : this.selectedLanguage === "wbmermaid" ? {
+        comp: "mermaid",
+        options: { src: O(this.currentCode) || this.currentCode }
+      } : this.selectedLanguage === "json" ? {
+        comp: "JsonViewer",
+        options: { props: { value: O(this.currentCode) } }
+      } : this.selectedLanguage === "wbdataviewer" ? {
+        comp: "WBDataViewer",
+        options: { props: { value: O(this.currentCode) } }
+      } : this.selectedLanguage === "wbcode" ? {
+        comp: "WBCode",
+        options: { props: { item: O(this.currentCode) } }
+      } : this.selectedLanguage === "html" ? (i) => i("div", { domProps: { innerHTML: this.currentCode } }) : this.selectedLanguage === "tex" ? { comp: "tex", options: { html: this.currentCode } } : this.selectedLanguage === "latex" ? { comp: "latex", options: { html: this.currentCode } } : this.selectedLanguage === "wbgis" ? {
+        comp: "WBGis",
+        options: {
+          props: { title: O(this.currentCode) || this.currentCode }
+        }
+      } : this.selectedLanguage === "wbc" ? e : O(this.currentCode) || this.currentCode;
+    },
+    iframeSrcDoc() {
+      return this.selectedLanguage === "markup" ? this.currentCode : "";
+    },
+    isExecutableLanguage() {
+      return ["javascript", "go", "python", "rust"].includes(this.selectedLanguage);
+    },
+    outputClass() {
+      return this.runOutput.includes("Error") || this.runOutput.includes("Exception") ? "has-error" : this.runOutput.includes("Warning") ? "has-warning" : "has-success";
+    },
+    coloredOutput() {
+      let e = this.escapeHtml(this.runOutput);
+      return e = e.replace(
+        /(Error|Exception|Traceback)/g,
+        '<span class="has-error">$1</span>'
+      ), e = e.replace(/Warning/g, '<span class="has-warning">$1</span>'), e;
+    },
+    currentSamples() {
+      var t;
+      const e = (t = this.samples) == null ? void 0 : t[this.selectedLanguage];
+      return e ? typeof e == "object" ? Object.entries(e).sort() : [] : [];
+    },
+    wrappedCode() {
+      const e = this.currentCode.trim();
+      return this.selectedLanguage === "rust" ? Array.isArray(e) ? e.join(`
+`) : e.includes("fn main()") ? e : `fn main() {
+    ${e}
+}` : this.selectedLanguage === "python" ? `import sys
+input = lambda: sys.stdin.readline().rstrip()
+${e}` : this.selectedLanguage === "javascript" ? `(function(){
+${e}
+})();` : this.selectedLanguage === "bash" ? `set -euo pipefail
+${e}` : e;
+    },
+    uploadAccept() {
+      return {
+        javascript: ".js,.mjs,.cjs",
+        typescript: ".ts,.tsx",
+        html: ".html,.htm",
+        css: ".css",
+        scss: ".scss,.sass",
+        json: ".json",
+        markdown: ".md,.markdown",
+        python: ".py",
+        java: ".java",
+        cpp: ".cpp,.cc,.cxx",
+        c: ".c",
+        rust: ".rs",
+        go: ".go",
+        vue: ".vue",
+        react: ".jsx,.tsx"
+        // add more as needed
+      }[this.selectedLanguage] || "*.*";
+    }
+  },
+  methods: {
+    notify(e, t = "info") {
+      const i = { message: e, type: t, id: Date.now() + Math.random() };
+      this.notifications.push(i), this.$emit("notify", i), setTimeout(() => {
+        const s = this.notifications.findIndex((a) => a.id === i.id);
+        s !== -1 && this.notifications.splice(s, 1);
+      }, 3500);
+    },
+    dismissNotification(e) {
+      const t = this.notifications.findIndex((i) => i.id === e);
+      t !== -1 && this.notifications.splice(t, 1);
+    },
+    // renderChildren(h) {
+    // const nodes = [];
+    // nodes.push(
+    //   h("div", { style: { display: this.showUpload === true ? "inline" : "none" } }, [
+    //     !this.isMinimized && this.showUpload ? this.renderUploadFile(h) : null,
+    //   ])
+    // );
+    // // ==================== TOP BAR ====================
+    // }
+    // // ==================== SEARCH INLINE ====================
+    // if (this.showSearch) {
+    //   nodes.push(this.renderSearchInline(h));
+    // }
+    // // ==================== MAIN LAYOUT ====================
+    // nodes.push(this.renderMainLayout(h));
+    // // ==================== SAMPLES ====================
+    // if (!this.isMinimized && this.showSamples && this.currentSamples.length) {
+    //   nodes.push(this.renderSamples(h));
+    // }
+    // // ==================== FOOT BAR ====================
+    // }
+    // return h('WBC',{props:{item:nodes}});
+    // return nodes;
+    // },
+    //       options: {
+    //         class: "pa-1 ma-1 grey lighten-1",
+    //         style: {
+    //           "align-items": "center",
+    //         },
+    //       },
+    //     },
+    //     ...barStyle,
+    //   };
+    //   // return WBCABarObj;
+    //   return h_("WBC", { props: { item: { WBCABarObj } } });
+    //     // Left buttons
+    //         keyy: `top.l.${i}`,
+    //         props: { config: this.getButton(btn) },
+    //       })
+    //     ),
+    //   ]),
+    // =================================================================
+    // DROP ZONE
+    // =================================================================
+    dragZone(e, t = this.renderCode) {
+      let i = {
+        dive: !0,
+        comp: "div",
+        options: {
+          // float:this.float,
+          // close:this.closeCode,
+          // drag:this.floatCode,
+          // style: {},
+          style: { height: "100%" },
+          // direction:'inherit',
+          // float:!true,
+          // class: ["code-drop-zone", "", { "drag-active pa-1": this.dragOver }],
+          class: "grey lighten-4 ",
+          on: {
+            dragover: (s) => (a) => {
+              s.data.options.class = " pa-1 ma-1", s.data.options.style.border = "blue dashed 10px", a.preventDefault(), this.dragOver = !0;
+            },
+            dragenter: (s) => (a) => {
+              s.data.options.class = "pa-1 ma-1", s.data.options.style.border = "blue dashed 10px", a.preventDefault(), this.dragOver = !0;
+            },
+            dragleave: (s) => (a) => {
+              s.data.options.class = "", s.data.options.style.border = null, a.preventDefault(), this.dragOver = !1;
+            },
+            drop: (s) => (a) => {
+              s.data.options.class = "", s.data.options.style.border = null, a.preventDefault(), this.dragOver = !1, this.handleDrop(a);
+            }
+          },
+          // html:'frag file here'
+          html: t
+        },
+        tracker: (s) => {
+          s.data.options.html = t, s.data.options.float = this.floatCode || null, s.data.options.drag = this.dragCode || null, s.data.options.hide = this.closeCode;
+        }
+      };
+      return e("WBC", {
+        key: `key-drag-${JSON.stringify(i).length % 1e3}`,
+        props: { item: i }
+      });
+    },
+    renderSearchInline(e) {
+      var t;
+      return this.showSearch ? e("span", { class: "prism-search-inline" }, [
+        e("input", {
+          ref: "searchInput",
+          domProps: { value: this.searchQuery },
+          on: {
+            input: (i) => this.searchQuery = i.target.value,
+            keydown: {
+              enter: (i) => {
+                i.preventDefault(), this.findNext();
+              },
+              esc: () => this.toggleSearch()
+            }
+          },
+          attrs: { placeholder: "Search..." },
+          class: "prism-search-input-inline"
+        }),
+        e("span", { class: "prism-search-controls-inline" }, [
+          e(
+            "VIcon",
+            { on: { click: () => this.findPrev() }, attrs: { title: "Previous" } },
+            ["mdi-chevron-left"]
+            // [this.createIcon(h, "M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z")]
+          ),
+          e("span", { class: "prism-search-counter-inline" }, [
+            `${this.searchResults.length ? this.searchIndex + 1 : 0} / ${((t = this.searchResults) == null ? void 0 : t.length) || 0}`
+          ]),
+          e(
+            "VIcon",
+            { on: { click: () => this.findNext() }, attrs: { title: "Next" } },
+            ["mdi-chevron-right"]
+            // [this.createIcon(h, "M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z")]
+          )
+          // h(
+          //   "span",
+          //   { on: { click: () => this.toggleSearch() }, attrs: { title: "Close" } },
+          //   // ['<']
+          //   [h("svg", { class: "icon", domProps: { innerHTML: this.icons.close } })]
+          // ),
+        ])
+      ]) : null;
+    },
+    // renderMainLayout(h) {
+    //   return h("div", { class: ["editor-and-preview", this.layoutClass] }, [
+    //     this.renderCode(h),
+    //     // this.renderOutput(h) ,
+    //     this.showPreview ? this.renderOutput(h) : null,
+    //   ]);
+    // },
+    renderCode(e, t) {
+      if (!this.showCode)
+        return null;
+      let i = {
+        options: {
+          load: !1,
+          // class: "panel result-panel", ref: "output"
+          class: "grey lighten-4",
+          style: { "min-height": "20px" }
+        },
+        default_0: "<div, panel-header>",
+        // 1:this.allComps.zoom,
+        // 2:"Code",
+        // default_1: (h_) =>
+        //   this.renderABar(
+        //     h_,
+        //   ),
+        // 4:h=>this.commandPaletteOpen ? this.renderCommandPalette(h) : null,
+        // Language badge + resizer
+        // default_2: (h) =>
+        //   h("div", { class: " blue ma-1 mb-5 panel-header" }, [
+        //     h("small", { class: "lang-badge" }, [
+        //       // With this:
+        default_2: (s) => this.renderEditors(s),
+        // ...(patchedCodeWBCObj||{}),
+        tracker: (s) => {
+          s.data.options.load = this.loadCode || this.loading;
+        }
+      };
+      return typeof t == "function" ? i = t(i) || i : t && (i = t), e("WBC", {
+        // key: `${JSON.stringify(codeObj).length % 973}-${this.key}`,
+        props: { item: i }
+      });
+    },
+    // =================================================================
+    // OU PANEL (Preview / Run Output)
+    // =================================================================
+    renderOutput(e, t) {
+      let i = this.outputConfig;
+      typeof t == "function" ? i = t(i) || i : t && (i = t);
+      const s = (this.autoUpdate || []).includes("preview") ? { key: `key-result-${JSON.stringify(i).length % 973}-${this.key}` } : {};
+      return e(de, {
+        ...s,
+        props: { open: this.showPreview, wbcConfig: i }
+      });
+    },
+    renderRecursiveHtmlOutput(e) {
+      if (!this.showHtml)
+        return null;
+      let t = {
+        // default: {options:
+        //   { class: "extra-content" },
+        //   [
+        // h("div", { class: "html-output" }, [
+        // default_item:{
+        comp: "WBCode",
+        options: {
+          // class: "grey pa-5 ma-5",
+          props: {
+            // loading: true,
+            item: {
+              key: this.convertedHtml,
+              code: this.convertedHtml,
+              languages: "html",
+              display: ["code"]
+              //   ["zoom"],
+              //   ["md to html|green"],
+              //   [`<b>${this.selectedLanguage}</b> to HTML`],
+              //   ["download", "edit", "copy"],
+              // ],
+            }
+          }
+          // }
+        },
+        tracker: (i) => {
+          i.data.options.props.load = this.isEmpty(this.convertedHtml), i.data.options.props.code = this.convertedHtml;
+        }
+      };
+      return e("WBC", {
+        // key: `key-recur-html-${JSON.stringify(recursiveHtmlOutputObj).length%973}`,
+        ...(this.autoUpdate || []).includes("html") ? { key: `key-result-${JSON.stringify(t).length % 973}-${this.key}` } : {},
+        props: { item: t }
+      });
+    },
+    renderRecursiveMarkdownOutput(e) {
+      if (!this.showMd)
+        return null;
+      let t = {
+        comp: "WBCode",
+        options: {
+          // keyy: `key-wbcode-${JSON.stringify(this.$turndown.turndown(this.convertedHtml)).length%77}`,
+          // class: "yellow pa-5 ma-5",
+          // style:{height:'100%'},
+          props: {
+            item: {
+              code: this.convertedMd,
+              display: ["code"],
+              languages: "markdown"
+              //   ["to md|green", "format"],
+              //   [`<b>${this.selectedLanguage}-output</b> to Markdown`],
+              //   ["download", "edit", "copy"],
+              // ],
+            }
+          }
+        }
+      };
+      return e("WBC", {
+        // keyy: this.convertedMd,
+        // keyy: `key-recur-format-${JSON.stringify(recursiveMarkdownOutputWBCObj).length%973}`,
+        ...(this.autoUpdate || []).includes("markdown") ? { key: `key-result-${JSON.stringify(t).length % 973}-${this.key}` } : {},
+        props: { item: t }
+      });
+    },
+    renderRecursiveDisplayedCodeToFormat(e) {
+      if (!this.showFormat)
+        return null;
+      let t = {
+        comp: "WBCode",
+        options: {
+          // class: "green pa-5 ma-5",
+          props: {
+            item: {
+              code: this.formattedDisplayCode,
+              display: ["code"],
+              languages: this.selectedLanguage
+              //   ["Formatter|green", "format"],
+              //   [`Formatted <b>${this.selectedLanguage}</b> Code`],
+              //   ["download", "edit", "copy"],
+              // ],
+            }
+          }
+        }
+        // tracker:that=>{
+        //   that.data.options.props.code= this.formattedDisplayCode
+        // }
+      };
+      return e("WBC", {
+        // keyy: `key-recur-format-${JSON.stringify(recursiveDisplayedCodeToFormatWBCObj).length%973}`,
+        ...(this.autoUpdate || []).includes("format") ? { key: `key-result-${JSON.stringify(t).length % 973}-${this.key}` } : {},
+        props: { item: t }
+      });
+    },
+    // // =================================================================
+    // // CODE BAR (when not editing)
+    // // =================================================================
+    //   // a0:{comp:'~div', options:{ class: 'red prism-header code-header' }},
+    //   // };
+    // =================================================================
+    // COMMAND PALETTE
+    // =================================================================
+    renderCommandPalette(e) {
+      return e(le, {
+        ref: "commandPaletteComponent",
+        props: { open: this.commandPaletteOpen, wbcConfig: this.commandPaletteConfig }
+      });
+    },
+    // =================================================================
+    // EDITOR + DROP ZONE
+    // =================================================================
+    // // =================================================================
+    // // EDITOR
+    // // =================================================================
+    // },
+    // =================================================================
+    // UPLOAD FOOTER
+    // =================================================================
+    // ─────────────────────────────── UPLOAD FOOTER (PURE VANILLA) ───────────────────────────────
+    renderUploadFile(e, t) {
+      let i = {
+        // dive: true,
+        default_0: {
+          comp: "input",
+          options: {
+            class: "",
+            ref: "fileInput",
+            attrs: {
+              type: "file",
+              accept: this.uploadAccept
+            },
+            // style: { display: "none" },
+            on: {
+              change: this.handleFileUpload
+              // click: this.handleFileUpload,
+            }
+          }
+        }
+      };
+      return typeof t == "function" ? i = t(i) || i : t && (i = t), e("WBC", { props: { item: i } });
+    },
+    // =================================================================
+    // Main Preview Output- sec
+    // =================================================================
+    renderRawPreview(e, t) {
+      if (!this.showPreview)
+        return null;
+      let i = {
+        // options:{keyy: `key-raw-preview-${JSON.stringify(this.editCode).length % 973}-${this.key}`},
+        default_0: {
+          comp: "~div",
+          options: {
+            class: "pa-5 preview-container",
+            // ref: "previewContainer",
+            style: {
+              transform: `scale(${this.zoomLevel})`,
+              transformOrigin: "top left"
+            }
+          }
+        },
+        default_1: [
+          [
+            "tex",
+            "latex",
+            "wbc",
+            "wbgis",
+            "wbcode",
+            "wbhtml",
+            "wbchart",
+            "wbmermaid",
+            "markdown",
+            "md",
+            "html",
+            "wbdataviewer",
+            "json"
+          ].includes(this.selectedLanguage) ? this.wbcPreviewItem : null
+        ]
+      };
+      return typeof t == "function" ? i = t(i) || i : t && (i = t), e("WBC", {
+        ...(this.autoUpdate || []).includes("preview") ? { key: `key-result-${JSON.stringify(i).length % 973}-${this.key}` } : {},
+        props: { item: i }
+      });
+    },
+    // =================================================================
+    // Main Result-preview Output- sec
+    // =================================================================
+    renderRawResult(e, t) {
+      if (!this.showPreview)
+        return null;
+      let i = {
+        // default_0:'<~div,pink pa-5>',
+        default_1: (s) => s("transition", { props: { name: "slide" } }, [
+          this.runOutput && !this.isMinimized && !(this.showPreview && this.supportsPreview) ? s(
+            "div",
+            { ref: "runOutputContainer", class: ["run-output", this.outputClass] },
+            [s("pre", { domProps: { innerHTML: this.coloredOutput } })]
+          ) : null
+        ])
+      };
+      return typeof t == "function" ? i = t(i) || i : t && (i = t), e("WBC", {
+        // keyy: `key-raw-result-${JSON.stringify(rawResultObj).length % 973}-${this.key}`,
+        ...(this.autoUpdate || []).includes("result") ? { key: `key-result-${JSON.stringify(i).length % 973}-${this.key}` } : {},
+        props: { item: i }
+      });
+    },
+    // =================================================================
+    // SAMPLES SELECT
+    // =================================================================
+    renderSamples(e, t) {
+      let i = this.samplesConfig;
+      return typeof t == "function" ? i = t(i) || i : t && (i = t), e(ue, { props: { open: this.showSamples, wbcConfig: i } });
+    },
+    // =================================================================
+    // USER CODES SELECT
+    // =================================================================
+    renderUserCodes(e, t) {
+      let i = this.userCodesConfig;
+      return typeof t == "function" ? i = t(i) || i : t && (i = t), e(ce, { props: { open: this.showCodes, wbcConfig: i } });
+    },
+    /* ---------- ICON HELPERS ---------- */
+    getButton(e) {
+      const t = this.allComps[e];
+      return t ? {
+        ...t,
+        // Bind ALL functions to preserve `this`
+        show: t.show ? t.show.bind(this) : () => !0,
+        action: t.action ? t.action.bind(this) : null,
+        title: typeof t.title == "function" ? t.title.bind(this) : t.title,
+        disabled: typeof t.disabled == "function" ? t.disabled.bind(this) : t.disabled
+      } : (console.warn(`[WBCode] Unknown button: "${e}"`), {
+        icon: "help",
+        title: e,
+        WBC: e,
+        show: () => !0,
+        action: () => {
+        }
+      });
+    },
+    /* ---------- EDITOR ---------- */
+    toggleEditorMode() {
+      this.useMonaco = !this.useMonaco, this.useMonaco ? this.$nextTick(() => this.monacoKey = Date.now()) : this.monacoEditor && (this.editCode = this.monacoEditor.getValue(), this.monacoEditor.dispose(), this.monacoEditor = null);
+    },
+    rotateLayout() {
+      this.layoutMode = (this.layoutMode + 1) % 3;
+    },
+    beautifyCode() {
+      this.formatCode(this.editCode).then((e) => {
+        this.isEditing && (this.editCode = e), this.displayCode = e, this.formattedDisplayCode = e;
+      });
+    },
+    async beautifyDisplayedCode() {
+      this.formatCode(this.displayCode).then((e) => {
+        this.formattedDisplayCode = e;
+      });
+    },
+    /* ---------- CODE RUN ---------- */
+    /* --------------------------------------------------------------
+       RUN CODE – **only the Python branch is changed**
+       -------------------------------------------------------------- */
+    async runCode() {
+      if (this.isRunning) return;
+      this.isRunning = !0, this.runOutput = `Running...
+`, this.capturedOutput.length = 0;
+      const { logs: e, restore: t } = this.captureConsole();
+      try {
+        let i = "";
+        if (this.selectedLanguage === "javascript") {
+          const a = new Function(this.wrappedCode)();
+          i = e.length ? e.join(`
+`) : a !== void 0 ? String(a) : "";
+        } else if (this.selectedLanguage === "python") {
+          const s = await this.loadPyodide();
+          s.globals.set("captured_output", this.capturedOutput);
+          try {
+            const a = await s.runPythonAsync(this.wrappedCode);
+            a !== void 0 && (i = String(a));
+          } catch (a) {
+            this.capturedOutput.push(a.message);
+          }
+          s.runPython("sys.stdout.flush()"), i = this.capturedOutput.join(`
+`) || e.join(`
+`) || "";
+        } else if (this.selectedLanguage === "go")
+          this.runOutput = `Go execution requires a backend proxy or pre-compiled WASM.
+
+Syntax highlighting works, but runtime execution is not supported in-browser.
+
+Tip: Use JS/Python for now, or host a Go playground proxy server.`;
+        else if (this.selectedLanguage === "cpp")
+          this.runOutput = `C++ execution requires a backend proxy or pre-compiled WASM.
+
+Syntax highlighting works, but runtime execution is not supported in-browser.
+
+Tip: Use JS/Python for now, or compile with Emscripten locally (emcc main.cpp -o main.html).`;
+        else if (this.selectedLanguage === "rust") {
+          this.runOutput = `Compiling & running Rust...
+`;
+          try {
+            const s = Array.isArray(this.wrappedCode) ? this.wrappedCode.join(`
+`) : this.wrappedCode, a = await fetch("https://play.rust-lang.org/execute", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                channel: "stable",
+                mode: "debug",
+                edition: "2021",
+                crateType: "bin",
+                tests: !1,
+                code: s,
+                backtrace: !1
+              })
+            });
+            if (!a.ok) throw new Error(`HTTP ${a.status}`);
+            const u = await a.json(), l = (u.stdout || "").trim(), d = (u.stderr || "").trim();
+            u.success && l ? i = l : d ? i = `Rust Error:
+${d}` : u.success ? i = "Done (no output)" : i = "Rust Error: Unknown";
+          } catch (s) {
+            i = `Rust Error: ${s.message}`;
+          }
+          this.runOutput = i;
+        } else this.selectedLanguage === "bash" && (this.runOutput = `Bash execution blocked by CORS (WASM CDN issue).
+
+Syntax highlighting works, but runtime needs a CORS proxy or backend.
+
+Tip: Use JS/Python/Rust for now, or try a different browser.`);
+        this.runOutput = i || "Done (no output)";
+      } catch (i) {
+        this.runOutput = `Error: ${i.message}`;
+      } finally {
+        t(), this.isRunning = !1;
+      }
+    },
+    /* ---------- UI ACTIONS ---------- */
+    copyCode: async function() {
+      try {
+        await navigator.clipboard.writeText(this.currentCode), this.copied = !0, setTimeout(() => this.copied = !1, 2e3);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    copyFormatCode: async function() {
+      try {
+        await navigator.clipboard.writeText(this.currentCode), this.copied = !0, setTimeout(() => this.copied = !1, 2e3);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    copyConvertedToHtml: async function() {
+      try {
+        await navigator.clipboard.writeText(this.convertedHtml), this.htmlCopied = !0, setTimeout(() => this.htmlCopied = !1, 2e3);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    copyConvertedToMd: async function() {
+      try {
+        await navigator.clipboard.writeText(this.convertedMd), this.mdCopied = !0, setTimeout(() => this.mdCopied = !1, 2e3);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    copyFormatedDisplayCode: async function() {
+      await this.beautifyDisplayedCode();
+      try {
+        await navigator.clipboard.writeText(this.formattedDisplayCode), this.fmtDispCodeCopied = !0, setTimeout(() => this.fmtDispCodeCopied = !1, 2e3);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    addNewCode() {
+      this.isNew = !0, this.editCode = "   ", this.filename = null, this.localFilename = null, this.isEditing = !0;
+    },
+    toggleEdit() {
+      this.isEditing = !this.isEditing, this.isEditing ? (this.$nextTick(() => {
+        var e, t;
+        return (t = (e = this.$refs.textarea) == null ? void 0 : e.focus) == null ? void 0 : t.call(e);
+      }), this.useMonaco && this.monacoEditor && this.formatCodeMonaco()) : (this.displayCode = this.editCode, this.history[this.historyIndex] !== this.editCode && this.addToHistory()), this.updateConvertedHtml();
+    },
+    toggleExpand() {
+      this.isExpanded = !0, this.isMinimized = !1, this.$nextTick(() => {
+        document.body.style.overflow = "hidden";
+        const e = this.$refs.block;
+        e.style.width = "80vw", e.style.height = "80vh", e.style.top = "10vh", e.style.left = "10vw", e.scrollIntoView({ behavior: "smooth" });
+      });
+    },
+    closeCollapse() {
+      this.isExpanded = !this.isExpanded, this.isMinimized = !1, this.isEditing = !1, this.showSearch = !1, document.body.style.overflow = "", this.$refs.block.style = "";
+    },
+    toggleMinimize() {
+      this.isMinimized = !this.isMinimized, this.isExpanded && (this.isExpanded = !1, document.body.style.overflow = "");
+    },
+    resetToOriginal() {
+      this.editCode = this.originalSrc, this.displayCode = this.originalSrc, this.history = [this.originalSrc], this.historyIndex = 0;
+    },
+    insertTab() {
+      const e = this.$refs.textarea;
+      if (!e) return;
+      const t = e.selectionStart, i = e.selectionEnd;
+      this.editCode = this.editCode.substring(0, t) + "  " + this.editCode.substring(i), this.$nextTick(() => {
+        e.selectionStart = e.selectionEnd = t + 2;
+      });
+    },
+    onTextareaInput(e) {
+      this.editCode = e.target.value, this.addToHistory();
+    },
+    updateTextareaHeight() {
+      this.$nextTick(() => {
+        const e = this.$refs.textarea;
+        e && (e.style.height = "auto", e.style.height = e.scrollHeight + "px", this.textareaHeight = e.scrollHeight);
+      });
+    },
+    syncScroll() {
+      var i;
+      const e = this.$refs.textarea, t = (i = this.$refs.editorContainer) == null ? void 0 : i.querySelector(".code-highlight");
+      e && t && (t.scrollTop = e.scrollTop, t.scrollLeft = e.scrollLeft);
+    },
+    /* --------------------------------------------------------------
+       SHARE
+       -------------------------------------------------------------- */
+    async shareCode() {
+      const e = new URLSearchParams({
+        code: btoa(unescape(encodeURIComponent(this.currentCode))),
+        lang: this.selectedLanguage,
+        preview: this.showPreview
+      }), t = `${window.location.origin}${window.location.pathname}?${e}`;
+      try {
+        await navigator.clipboard.writeText(t), this.notify("Share link copied to clipboard!", "success");
+      } catch {
+        prompt("Copy this link:", t);
+      }
+    },
+    /* ---------- SAMPLES ---------- */
+    applySample(e) {
+      if (!e)
+        this.editCode = "", this.runOutput = "";
+      else {
+        const t = O(e) || e;
+        this.editCode = typeof t == "object" ? JSON.stringify(t, null, 2) : t, this.displayCode = this.editCode, this.runOutput = "";
+      }
+      this.updateConvertedHtml();
+    },
+    /* ---------- UTILS ---------- */
+    escapeHtml(e) {
+      const t = document.createElement("div");
+      return t.textContent = e, t.innerHTML;
+    },
+    getInitialLanguage() {
+      const e = this.language, t = typeof this.languages == "string";
+      return typeof e == "string" && this.languagesObj.some((i) => i.value === e) ? e : t ? this.languages.split(",")[0].trim() : "javascript";
+    },
+    /* ---------- LAYOUT / FULLSCREEN ---------- */
+    toggleFullscreen() {
+      document.fullscreenElement ? document.exitFullscreen().then(() => this.isFullscreen = !1) : this.$el.requestFullscreen().then(() => this.isFullscreen = !0);
+    },
+    startResize(e) {
+      var t, i;
+      this.isEditing && (this.isResizing = !0, this.resizeStartX = e.clientX, this.resizeStartY = e.clientY, this.initialCodeWidth = ((t = this.$refs.code) == null ? void 0 : t.offsetWidth) || 0, this.initialCodeHeight = ((i = this.$refs.code) == null ? void 0 : i.offsetHeight) || 0, document.addEventListener("mousemove", this.onResize), document.addEventListener("mouseup", this.stopResize));
+    },
+    onResize(e) {
+      if (!this.isResizing) return;
+      const t = e.clientX - this.resizeStartX, i = e.clientY - this.resizeStartY;
+      if (this.layoutMode === 0 || this.layoutMode === 2) {
+        const s = this.initialCodeWidth + t;
+        this.$refs.code.style.width = `${s}px`, this.$refs.output.style.flex = "1";
+      } else {
+        const s = this.initialCodeHeight + i;
+        this.$refs.code.style.height = `${s}px`, this.$refs.output.style.flex = "1";
+      }
+      this.$nextTick(() => {
+        var s, a;
+        return (a = (s = this.monacoEditor) == null ? void 0 : s.layout) == null ? void 0 : a.call(s);
+      });
+    },
+    stopResize() {
+      this.isResizing = !1, document.removeEventListener("mousemove", this.onResize), document.removeEventListener("mouseup", this.stopResize);
+    },
+    /* ---------- PDF EXPORT (unchanged) ---------- */
+    async waitForRender() {
+      await this.$nextTick(), await new Promise((e) => setTimeout(e, 150));
+      try {
+        await document.fonts.ready;
+      } catch {
+      }
+    },
+    async waitForIframe() {
+      var t;
+      const e = this.$refs.previewIframe;
+      return e && (((t = e.contentDocument) == null ? void 0 : t.readyState) !== "complete" && await new Promise((i) => e.addEventListener("load", i, { once: !0 })), await new Promise((i) => setTimeout(i, 300))), !0;
+    },
+    async exportPDF(e, t, i = {}) {
+      if (!e) return;
+      const s = e.cloneNode(!0), a = document.createElement("div");
+      a.style.cssText = `
+    position: relative;
+    background: ${this.isDarkMode ? "#1e1e1e" : "#ffffff"};
+    color: ${this.isDarkMode ? "#e4e4e7" : "#1f2937"};
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 50px 40px 90px 40px;   /* generous bottom space so footer never overlaps */
+    box-sizing: border-box;
+  `;
+      const u = document.createElement("div");
+      u.style.cssText = `
+    text-align: center;
+    font-size: 13.5pt;            /* reduced from 15pt → just a bit smaller */
+    font-weight: 600;
+    margin-bottom: 26px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid ${this.isDarkMode ? "#444" : "#e5e7eb"};
+    opacity: 0.92;
+  `, u.innerHTML = `
+    Exported with <span style="color:#6366f1; font-weight:700;">wbc-ui2</span>
+    • <a href="https://wbc-ui2.com" style="color:#6366f1; text-decoration:none;">wbc-ui2.com</a>
+    <div style="margin-top:7px; font-size:12pt; font-weight:normal; opacity:0.78;">
+      ${(/* @__PURE__ */ new Date()).toLocaleString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      })}
+      • ${this.localFilename}.${re(this.selectedLanguage)}
+    </div>
+  `, a.appendChild(u), a.appendChild(s), document.body.appendChild(a), await this.$nextTick(), await this.waitForRender(150), i.includePreview && await this.waitForIframe();
+      const l = {
+        margin: [0, 0, 0, 0],
+        filename: t,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: !0,
+          backgroundColor: this.isDarkMode ? "#1e1e1e" : "#ffffff",
+          width: document.body.clientWidth - 100,
+          height: a.scrollHeight + 200,
+          scrollX: 0,
+          scrollY: 0
+        },
+        jsPDF: { unit: "px", format: "a4", orientation: "portrait" }
+      };
+      try {
+        await ge().set(l).from(a).save();
+      } finally {
+        document.body.removeChild(a), i.restorePreview !== void 0 && (this.showPreview = i.restorePreview);
+      }
+    },
+    async exportCodeOnlyPDF() {
+      const e = this.$refs.codePre;
+      if (!e) return;
+      const t = document.createElement("pre");
+      t.style.cssText = e.style.cssText + ";margin:0;padding:2rem;font-size:12.5pt;line-height:1.6;", t.textContent = e.innerText, await this.exportPDF(t, `${this.localFilename || "code"}-only.pdf`);
+    },
+    async exportComponentPDF() {
+      const e = this.$refs.block;
+      if (!e) return;
+      const t = this.showPreview;
+      this.showPreview = !0, await this.$nextTick(), await this.waitForIframe(), await this.exportPDF(e, `${this.localFilename || "component"}.pdf`, {
+        includePreview: !0,
+        restorePreview: t
+      }), this.showPreview = t;
+    },
+    /* ---------- OTHER UI ---------- */
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+    },
+    togglePreview() {
+      this.showPreview = !this.showPreview;
+    },
+    toggleShowCode() {
+      this.showCode = !this.showCode;
+    },
+    toggleHtml() {
+      this.showHtml = !this.showHtml;
+    },
+    toggleClose() {
+      this.close_ = !this.close_;
+    },
+    toggleCloseCode() {
+      this.closeCode = !this.closeCode;
+    },
+    toggleMd() {
+      this.showMd = !this.showMd;
+    },
+    toggleFormat() {
+      this.showFormat = !this.showFormat;
+    },
+    onPreviewLoad() {
+    },
+    closePDFMenu(e) {
+      this.$el.contains(e.target) || (this.pdfMenuOpen = !1);
+    },
+    toggleZoom() {
+      const e = [1, 1.25, 1.5], t = e.indexOf(this.zoomLevel);
+      this.zoomLevel = e[(t + 1) % e.length];
+    },
+    // clearToOriginal() {
+    //   if (!confirm("Clear editor and reset to the original source?")) return;
+    //   this.editCode = this.originalSrc;
+    //   this.displayCode = this.originalSrc;
+    //   this.selectedSample = null;
+    //   // this.$ & _nextTick(() => this.updateTextareaHeight());
+    // },
+    /* ---------- SETTINGS STORAGE ---------- */
+    saveSettings() {
+      const e = {
+        monacoTheme: this.monacoTheme,
+        useMonaco: this.useMonaco,
+        monacoSettings: this.monacoSettings
+      };
+      localStorage.setItem("wbcode-settings", JSON.stringify(e));
+    },
+    loadSettings() {
+      const e = localStorage.getItem("wbcode-settings");
+      if (e) {
+        const t = JSON.parse(e);
+        this.monacoTheme = t.monacoTheme || "vs-dark", this.useMonaco = t.useMonaco ?? !0, Object.assign(this.monacoSettings, t.monacoSettings || {});
+      }
+    },
+    duplicateLineInTextarea() {
+      const e = this.$refs.textarea;
+      if (!e) return;
+      const t = e.selectionStart, i = e.selectionEnd, s = this.editCode, a = s.lastIndexOf(`
+`, t - 1) + 1, u = s.indexOf(`
+`, i), l = s.substring(a, u === -1 ? s.length : u), d = s.substring(0, u === -1 ? s.length : u) + `
+` + l + s.substring(u === -1 ? s.length : u);
+      this.editCode = d, this.$nextTick(() => {
+        const m = t + l.length + 1;
+        e.setSelectionRange(m, m), e.focus();
+      });
+    },
+    toggleSearch() {
+      this.showSearch = !this.showSearch, this.showSearch ? (this.$nextTick(() => {
+        var e;
+        return (e = this.$refs.searchInput) == null ? void 0 : e.focus();
+      }), this.performSearch()) : (this.searchQuery = "", this.searchIndex = 0, this.searchResults = []);
+    },
+    performSearch() {
+      var u;
+      if (!this.searchQuery) {
+        this.searchResults = [];
+        return;
+      }
+      const e = this.$refs.codePre || ((u = this.$refs.editorContainer) == null ? void 0 : u.querySelector("pre"));
+      if (!e) return;
+      const t = e.innerText, i = new RegExp(oe(this.searchQuery), "gi"), s = [];
+      let a;
+      for (; (a = i.exec(t)) !== null; )
+        s.push(a.index);
+      this.searchResults = s, this.searchIndex = 0, this.highlightSearch();
+    },
+    highlightSearch() {
+      this.$forceUpdate();
+    },
+    findNext() {
+      this.searchResults.length !== 0 && (this.searchIndex = (this.searchIndex + 1) % this.searchResults.length, this.scrollToResult());
+    },
+    findPrev() {
+      this.searchResults.length !== 0 && (this.searchIndex = this.searchIndex === 0 ? this.searchResults.length - 1 : this.searchIndex - 1, this.scrollToResult());
+    },
+    scrollToResult() {
+      var l;
+      const e = this.$refs.codePre || ((l = this.$refs.editorContainer) == null ? void 0 : l.querySelector("pre"));
+      if (!e || this.searchResults.length === 0) return;
+      e.innerText;
+      const t = this.searchResults[this.searchIndex], i = t + this.searchQuery.length, s = new Range();
+      let a = 0, u = e.firstChild;
+      for (; u; ) {
+        if (u.nodeType === 3) {
+          const d = u.textContent.length;
+          if (a + d >= t) {
+            s.setStart(u, t - a), s.setEnd(u, i - a);
+            break;
+          }
+          a += d;
+        }
+        u = u.nextSibling || u.firstChild || (u = u.nextSibling);
+      }
+      if (s.startContainer) {
+        const d = s.getBoundingClientRect();
+        e.scrollTop = e.scrollTop + d.top - e.clientHeight / 2;
+      }
+    },
+    openCommandPalette() {
+      this.commandPaletteOpen = !this.commandPaletteOpen;
+    },
+    // executeCommand(index) {
+    //   const cmd = this.filteredCommands[index ?? this.selectedCommandIndex];
+    //   if (cmd && !cmd.disabled) {
+    //     cmd.action();
+    //   }
+    //   this.commandPaletteOpen = false;
+    // },
+    handleClickOutside(e) {
+      var i;
+      if (!this.commandPaletteOpen) return;
+      const t = (i = this.$refs.commandPaletteComponent) == null ? void 0 : i.$el;
+      t && t.contains(e.target) || (this.commandPaletteOpen = !1);
+    },
+    // getCommandIcon(label) {
+    //   const map = {
+    //     "Copy Code": this.icons.copy,
+    //     "Download Code": this.icons.download,
+    // },
+    downloadCode() {
+      const t = {
+        markup: "html",
+        css: "css",
+        javascript: "js",
+        markdown: "md",
+        html: "html",
+        tex: "tex",
+        latex: "tex",
+        json: "json",
+        wbdataviewer: "json",
+        wbc: "WBC",
+        wbgis: "WBGis",
+        wbcode: "WBCode",
+        wbhtml: "html",
+        wbchart: "json",
+        wbmermaid: "mmd",
+        python: "py",
+        bash: "sh",
+        go: "go",
+        cpp: "cpp",
+        rust: "rs",
+        sql: "sql"
+      }[this.selectedLanguage] || "txt", i = JSON.stringify(this.currentCode), s = this.localFilenname || this.filename || `code.${t}`, a = new Blob([i], { type: "text/plain" }), u = URL.createObjectURL(a), l = document.createElement("a");
+      l.href = u, l.download = s, document.body.appendChild(l), l.click(), document.body.removeChild(l), URL.revokeObjectURL(u);
+    },
+    // Auto-run
+    onLanguageChange() {
+      var e;
+      this.applySample((e = this.currentSamples[0]) == null ? void 0 : e[1]);
+    },
+    // ─────────────────────────────── handleFileUpload & handleDrop (unchanged, just confirm) ───────────────────────────────
+    async handleFileUpload(e) {
+      var i, s, a, u, l, d, m;
+      const t = (s = (i = e.target) == null ? void 0 : i.files) == null ? void 0 : s[0];
+      if (t)
+        try {
+          const S = await t.text();
+          if (this.editCode = S, this.displayCode = S, this.originalSrc = S, this.updateConvertedHtml(), (a = this.userCodes) != null && a[this.selectedLanguage] || (this.userCodes[this.selectedLanguage] = []), typeof (t == null ? void 0 : t.name) == "string") {
+            const b = t.name.split(".").slice(0, -1).join(".");
+            this.localFilename = b;
+          }
+          this.userCodes[this.selectedLanguage][this.localFilename] = S, (l = (u = this.$message) == null ? void 0 : u.success) == null || l.call(u, `Loaded: ${t.name}`), e.target.value = "";
+        } catch (S) {
+          (m = (d = this.$message) == null ? void 0 : d.error) == null || m.call(d, "Failed to read file"), console.error(S);
+        }
+    },
+    handleDrop(e) {
+      var s, a;
+      e.preventDefault(), this.dragOver = !1;
+      const t = (a = (s = e.dataTransfer) == null ? void 0 : s.files) == null ? void 0 : a[0];
+      if (!t) return;
+      const i = new FileReader();
+      i.onload = (u) => {
+        var d, m, S, b;
+        const l = (d = u.target) == null ? void 0 : d.result;
+        if (this.editCode = l, this.displayCode = l, this.originalSrc = l, this.updateConvertedHtml(), (m = this.userCodes) != null && m[this.selectedLanguage] || (this.userCodes[this.selectedLanguage] = {}), typeof (t == null ? void 0 : t.name) == "string") {
+          const w = t.name.split(".").slice(0, -1).join(".");
+          this.localFilename = w;
+        }
+        this.userCodes[this.selectedLanguage][this.localFilename] = l, (b = (S = this.$message) == null ? void 0 : S.success) == null || b.call(S, `Dropped: ${t.name}`);
+      }, i.onerror = () => {
+        var u, l;
+        return (l = (u = this.$message) == null ? void 0 : u.error) == null ? void 0 : l.call(u, "Failed to read dropped file");
+      }, i.readAsText(t);
+    },
+    async updateConvertedHtml() {
+      this.isExecutableLanguage && (this.convertedHtml = await this.formatCode(
+        this.textToParagraphs(this.runOutput)
+      )), this.formattedDisplayCode = await this.formatCode(this.displayCode), this.loadCode = !1, this.key += 1;
+    },
+    renderVNodeToString(e, t = !0, i) {
+      const s = typeof e == "function" ? e(this.$createElement) : e, a = new (this.$root.constructor.extend())({
+        ...i ? { parent: i } : {},
+        render: (l) => s
+      }).$mount();
+      let u = a.$el.outerHTML;
+      if (a.$destroy(), t !== !1) {
+        const l = t === !0 ? {
+          removeEmpty: ["span", "div"],
+          collapseWrappers: ["span", "div"]
+        } : t;
+        u = this.cleanVueHtml(u, l);
+      }
+      return u;
+    },
+    mountVNode(e, t) {
+      const i = typeof e == "function" ? e(this.$createElement) : e, s = new (this.$root.constructor.extend())({
+        ...t ? { parent: t } : {},
+        render: (a) => i
+      }).$mount();
+      return {
+        vm: s,
+        el: s.$el,
+        get html() {
+          return this.cleanVueHtml(s.$el.outerHTML);
+        },
+        destroy: () => s.$destroy()
+      };
+    },
+    // WBC prototype methods are injected at install time by wb-code's install()
+    // No need to import variables.js — methods like randomKey, isEmpty,
+    // cleanVueHtml, formatCode, etc. come from the WBC core component
+    _withNotifications(e, t) {
+      if (!this.notifications.length) return t;
+      const i = this.notifications.map(
+        (s) => e("div", {
+          key: s.id,
+          class: "wb-notification",
+          style: {
+            background: s.type === "warn" ? "#ff9800" : s.type === "success" ? "#4caf50" : "#2196f3",
+            color: "#fff",
+            padding: "10px 18px",
+            marginBottom: "8px",
+            borderRadius: "6px",
+            cursor: "pointer",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            fontSize: "14px"
+          },
+          on: { click: () => this.dismissNotification(s.id) },
+          domProps: { innerText: s.message }
+        })
+      );
+      return e("div", { style: { position: "relative" } }, [
+        t,
+        e("div", {
+          style: {
+            position: "fixed",
+            top: "16px",
+            right: "16px",
+            zIndex: 1e4,
+            display: "flex",
+            flexDirection: "column"
+          }
+        }, i)
+      ]);
+    }
+  },
+  /* ====================== WATCH ====================== */
+  watch: {
+    //  async runOutput() {
+    //     await this.updateConvertedHtml();
+    //   },
+    //   isExecutableLanguage() {
+    //     this.updateConvertedHtml();
+    //   },
+    monacoSettings: {
+      handler() {
+        this.saveSettings();
+      },
+      deep: !0
+    },
+    monacoTheme() {
+      this.saveSettings();
+    },
+    useMonaco(e) {
+      !e && this.monacoEditor ? this.savedScroll = this.monacoEditor.getScrollTop() : this.$nextTick(() => {
+        var t, i;
+        return (i = (t = this.monacoEditor) == null ? void 0 : t.setScrollTop) == null ? void 0 : i.call(t, this.savedScroll);
+      }), this.saveSettings();
+    },
+    code(e) {
+      this.originalSrc = e, this.isEditing || (this.displayCode = e, this.editCode = e);
+    },
+    // selectedLanguage() {
+    //   this.onLanguageChange();
+    // },
+    editCode(e, t) {
+      e !== t && this.isEditing && !this.isUndoOrRedo && this.addToHistory(), this.isEditing && (this.displayCode = e), this.beautifyDisplayedCode();
+    },
+    searchQuery() {
+      this.showSearch && this.performSearch();
+    },
+    commandQuery() {
+      this.selectedCommandIndex = 0;
+    },
+    commandPaletteOpen(e) {
+      this.commandPaletteOpen = !this.commandPaletteOpen, document.addEventListener("click", this.handleClickOutside);
+    },
+    convertedHtml(e) {
+      this.convertedMd = this.$turndown.turndown(e || "");
+    }
+    // wbcPreviewItem(newVal) {
+    //     let tmpVNode=h_=>h_("WBC", {
+    //                 props: { item: newval },
+    //               })
+    //     this.convertedHtml=this.pretty(this.cleanVueHtml(this.renderVNodeToString(tmpVNode)),{indentSize:2})
+    //     this.convertedMd=this.$turndown.turndown(this.convertedHtml)
+    //   },
+    // showUpload(val) {
+    //   this.showUpload = val; // if you want reactivity when parent changes the prop
+    // },
+    // currentCode() {
+    //   return this.isEditing ? this.editCode : this.displayCode;
+    // },
+  },
+  /* ====================== LIFECYCLE ====================== */
+  created() {
+    var i, s, a, u, l, d, m, S, b, w, $, E, A, C, f, v, o, r, c, h, p, g, y;
+    if (!(typeof __WBC_DEV__ < "u" && __WBC_DEV__ === !0 || ((s = (i = this.$store) == null ? void 0 : i.getters) == null ? void 0 : s._wbcDev) === !0)) {
+      const k = (() => {
+        try {
+          const x = document.cookie.match(/(?:^|; )_wb_code_auth=([^;]*)/);
+          if (x && x[1]) {
+            const _ = JSON.parse(decodeURIComponent(x[1]));
+            if (_.status === "valid" && Date.now() - _.ts < 864e5) return _.details;
+          }
+        } catch {
+        }
+        return null;
+      })();
+      if (k)
+        this.$store.commit("setTierStatus", { pkg: "code", authorized: !0, details: k });
+      else if (this.$store && this.$store.state._wbcProValidationStarted.code === void 0) {
+        this.$store.state._wbcProValidationStarted.code = !0;
+        const x = (a = this.$wbcCodeOptions) == null ? void 0 : a.premiumKey;
+        if (x === "WBCode_SIMULATE_PRO" || x === "WBC_SIMULATE_PRO") {
+          process.env.NODE_ENV !== "production" && console.warn("🛠️ WB-CODE PRO: Simulation Mode Active.");
+          const _ = { premiumKey: "WBC_SIMULATE_PRO", expiresAt: "Never (Dev)", customer: "Developer" }, L = JSON.stringify({ status: "valid", ts: Date.now(), details: _ });
+          document.cookie = `_wb_code_auth=${encodeURIComponent(L)}; path=/; max-age=86400; SameSite=Lax`, this.$store.commit("setTierStatus", { pkg: "code", authorized: !0, details: _ });
+        } else x && fetch("https://api.lemonsqueezy.com/v1/licenses/validate", {
+          method: "POST",
+          headers: { Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" },
+          body: `license_key=${x}`
+        }).then((_) => _.json()).then((_) => {
+          var L, D, R, V, H;
+          if (_.valid === !0) {
+            const F = {
+              premiumKey: x,
+              expiresAt: ((L = _.meta) == null ? void 0 : L.expires_at) || ((D = _.license_key) == null ? void 0 : D.expires_at),
+              customer: ((R = _.meta) == null ? void 0 : R.customer_name) || ((V = _.license_key) == null ? void 0 : V.customer_name),
+              status: (H = _.license_key) == null ? void 0 : H.status
+            }, T = JSON.stringify({ status: "valid", ts: Date.now(), details: F });
+            document.cookie = `_wb_code_auth=${encodeURIComponent(T)}; path=/; max-age=86400; SameSite=Lax`, this.$store.commit("setTierStatus", { pkg: "code", authorized: !0, details: F });
+          } else
+            this.$store.commit("setTierStatus", { pkg: "code", authorized: !1, details: null });
+        }).catch(() => {
+        });
+      }
+    }
+    this.loadSettings(), this.item_ = { ...this.item }, ((u = this.item_) == null ? void 0 : u.codeDive) == !0 && (this.item_ = this.generalVal(
+      this.item_,
+      this.itemAccessebility,
+      // this.lg
+      this.lang
+      // lg
+    )), this.loadCode = this.isEditing, this.patcher_ = (l = this.item_) == null ? void 0 : l.patcher, this.showPreview = !0, this.showHtml = !0, this.showMd = !0, this.showFormat = !0, this.showUpload = !0, this.showSamples = !0, this.showCodes = !0, this.key = ((d = this.item_) == null ? void 0 : d.key) || this.randomKey("wbcode"), this.output = (m = this.item_) == null ? void 0 : m.output, this.code = (S = this.item_) == null ? void 0 : S.code, this.item_.wbCode = ((b = this.item_) == null ? void 0 : b.wbCode) || this.wbCode, this.language = ((w = this.item_) == null ? void 0 : w.language) || "javascript", this.languages = (($ = this.item_) == null ? void 0 : $.languages) || "javascript", this.filename = (E = this.item_) == null ? void 0 : E.filename, this.keyBind = ((A = this.item_) == null ? void 0 : A.keyBind) || !1, this.commands = ((C = this.item_) == null ? void 0 : C.commands) || [], this.autoRun = (f = this.item_) == null ? void 0 : f.autoRun, this.preview = (v = this.item_) == null ? void 0 : v.preview, this.full = (o = this.item_) == null ? void 0 : o.full, this.options = (r = this.item_) == null ? void 0 : r.options, this.display = (c = this.item_) == null ? void 0 : c.display, this.autoUpdate = (h = this.item_) == null ? void 0 : h.autoUpdate, this.samples = ((p = this.item_) == null ? void 0 : p.samples) || ((g = this.item_) == null ? void 0 : g.userCodes) || {}, this.userCodes = ((y = this.item) == null ? void 0 : y.userCodes) || {}, this.global_ = this.global, this.global_ && (this.isWbCodePro || this.__DEV__) && (window[this.global_] = this.itemAccessebility, this.__DEV__ && (window[this.global_ + "_vm"] = this)), this.__DEV__ && (window.elm = this.itemAccessebility), this.editCode = this.code, this.displayCode = this.code, this.convertedHtml = this.code, this.selectedLanguage = this.getInitialLanguage(), this.history = [this.code], this.historyIndex = 0, document.addEventListener(
+      "fullscreenchange",
+      () => this.isFullscreen = !!document.fullscreenElement
+    ), (this.languageList || []).forEach((n) => {
+      var k;
+      n != null && n.value && (this.samples[n.value] = ((k = this.samples) == null ? void 0 : k[n.value]) || []);
+    }), this.$nextTick(this.updateTextareaHeight), !String(this.code || "").trim() && this.currentSamples.length && this.$nextTick(() => {
+    }), this.isExecutableLanguage && this.autoRun && this.$nextTick(() => this.runCode());
+    const t = (n) => {
+      var x;
+      if (!this.keyBind)
+        return null;
+      if (this.isEditing, (n.ctrlKey || n.metaKey) && n.key === "Enter") {
+        n.preventDefault(), this.isExecutableLanguage && this.runCode();
+        return;
+      }
+      if ((n.ctrlKey || n.metaKey) && n.key === "e" || n.key === "F2") {
+        n.preventDefault(), this.isEditing, this.toggleEdit();
+        return;
+      }
+      if ((n.ctrlKey || n.metaKey) && n.key === "s") {
+        n.preventDefault(), this.isEditing && this.toggleEdit();
+        return;
+      }
+      if ((n.ctrlKey || n.metaKey) && n.key === "o") {
+        n.preventDefault(), this.isNew || this.addNewCode();
+        return;
+      }
+      if ((n.ctrlKey || n.metaKey) && n.shiftKey && n.key === "S") {
+        n.preventDefault(), this.isEditing && this.toggleEdit(), this.isExecutableLanguage && this.$nextTick(() => this.runCode());
+        return;
+      }
+      if (this.isEditing && (n.ctrlKey || n.metaKey)) {
+        if (n.key === "z" && !n.shiftKey) {
+          n.preventDefault(), this.undo();
+          return;
+        }
+        if (n.key === "y" || n.key === "z" && n.shiftKey) {
+          n.preventDefault(), this.redo();
+          return;
+        }
+      }
+      if ((n.ctrlKey || n.metaKey) && n.key === "f") {
+        n.preventDefault(), this.isEditing || (x = this.toggleSearch) == null || x.call(this);
+        return;
+      }
+      if (this.isEditing && (n.ctrlKey || n.metaKey) && n.key === "/") {
+        n.preventDefault(), this.useMonaco && this.monacoEditor && this.monacoEditor.getAction("editor.action.commentLine").run();
+        return;
+      }
+      if (this.isEditing && (n.ctrlKey || n.metaKey) && n.key === "d") {
+        n.preventDefault(), this.useMonaco && this.monacoEditor ? this.monacoEditor.getAction("editor.action.copyLinesDownAction").run() : this.duplicateLineInTextarea();
+        return;
+      }
+      if (n.key === "Escape") {
+        this.isEditing ? (n.preventDefault(), this.toggleEdit()) : this.showMonacoSettings ? this.showMonacoSettings = !1 : this.showSearch && (this.showSearch = !1);
+        return;
+      }
+      const k = n.ctrlKey || n.metaKey;
+      if (k && n.shiftKey && n.key === "P") {
+        n.preventDefault(), this.openCommandPalette();
+        return;
+      }
+      if (k && n.key === "b") {
+        n.preventDefault(), this.supportsPreview && this.togglePreview();
+        return;
+      }
+      if (k && n.altKey && n.key === "f") {
+        n.preventDefault(), this.useMonaco && this.monacoEditor && this.monacoEditor.getAction("editor.action.formatDocument").run();
+        return;
+      }
+      if (k && n.key === "p") {
+        n.preventDefault(), this.togglePreview();
+        return;
+      }
+      if (n.altKey && (n.key === "ArrowUp" || n.key === "ArrowDown")) {
+        if (n.preventDefault(), this.useMonaco && this.monacoEditor) {
+          const _ = n.key === "ArrowUp" ? "editor.action.moveLinesUpAction" : "editor.action.moveLinesDownAction";
+          this.monacoEditor.getAction(_).run();
+        }
+        return;
+      }
+    };
+    document.addEventListener("keydown", t), this.$once("hook:beforeDestroy", () => {
+      document.removeEventListener("keydown", t);
+    });
+  },
+  async mounted() {
+    var t, i;
+    const e = this.isWbCodePro || this.__DEV__;
+    e && typeof ((t = this.item) == null ? void 0 : t.init) == "function" && this.item.init(this.itemAccessebility), e && typeof ((i = this.item) == null ? void 0 : i.logic) == "function" && this.item.logic(this.itemAccessebility), this.selectedLanguage === "python" && await this.loadPyodide();
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.handleClickOutside), document.body.style.overflow = "";
+  }
+}, je = null, Ve = null;
+var Be = /* @__PURE__ */ j(
+  Ne,
+  je,
+  Ve,
+  !1,
+  null,
+  "27cb118b"
+);
+const Y = Be.exports, q = function(e, t = {}) {
+  var s;
+  if (q.installed) return;
+  q.installed = !0, e.prototype.$wbcCodeOptions = t, e.component("WBCode", Y);
+  const i = e.options.components.WBC;
+  if (i) {
+    const a = ((s = i.options) == null ? void 0 : s.methods) || {};
+    Y.methods = {
+      ...a,
+      ...Y.methods || {}
+    };
+  } else
+    console.warn("[@wbc-ui2/code] Core <WBC> not found. Method inheritance skipped.");
+};
+typeof window < "u" && window.Vue && q(window.Vue);
+const We = {
+  install: q
+};
+export {
+  Y as WBCode,
+  We as default
+};

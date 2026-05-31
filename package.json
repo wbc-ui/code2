@@ -1,0 +1,20 @@
+{
+  "name": "@wbc-ui/code2",
+  "version": "1.0.0-r12",
+  "main": "dist/code2.umd.js",
+  "module": "dist/code2.es.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "logo/"
+  ],
+  "dependencies": {
+    "html2pdf.js": "^0.12.1",
+    "prismjs": "^1.30.0"
+  },
+  "peerDependencies": {
+    "@wbc-ui/core2": "1.0.0-r12",
+    "vue": "^2.7.16"
+  }
+}
