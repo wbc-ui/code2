@@ -21,6 +21,18 @@
   <a href="https://wbc-ui.com">💎 Pro</a>
 </p>
 
+<p align="center">
+  <img src="./assets/hero-code-editor.webp"
+       alt="@wbc-ui/code2 — JSON-driven code editor with live preview and run"
+       width="780"/>
+</p>
+
+<p align="center">
+  <img src="./assets/mermaid-architecture.png"
+       alt="Architecture diagram"
+       width="680"/>
+</p>
+
 ---
 
 ## Why?
@@ -74,7 +86,7 @@ A **Vue 2.7+ component** — `<WBCode>` — whose entire output is a WBC tree. I
 
 ---
 
-## Teasing Examples
+## Usage Examples
 
 ### Level 1 — Hello, WBCode
 ```html
@@ -263,20 +275,11 @@ For a longer walkthrough with worked examples, see the documentation hub at [wbc
 
 <details>
 <summary>Mermaid diagram (interactive fallback)</summary>
-<div align="center">
-
-```mermaid
-flowchart TD
-    Item("item<br>(code · language · display · output)") --> WBCode["&lt;WBCode :item='...' /&gt;"]
-    WBCode --> AllComps{"Expose pieces<br>(allComps)"}
-
-    AllComps -- "code · result · run · copy · languages · …" --> Output["item.output<br>(array / object / function)"]
-    Output --> Tree["WBC tree"]
-    Tree --> WBC["&lt;WBC&gt; engine (@wbc-ui/core2)"]
-    WBC --> DOM(("Rendered editor"))
-```
-
-</div>
+<p align="center">
+  <img src="./assets/mermaid-under-the-hood.png"
+       alt="Component architecture"
+       width="680"/>
+</p>
 </details>
 
 - **Output is a WBC tree** — every toolbar, panel, and viewer is a named `allComps` piece you arrange with data
